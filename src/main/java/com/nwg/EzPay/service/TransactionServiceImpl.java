@@ -118,13 +118,21 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	@Override
 	public Transaction updateTransactionService(Transaction transaction) throws InvalidTransactionObjectException {
-		Transaction updatedTransaction = null;
-		if (transaction != null) {
-			updatedTransaction = iTransactionDAO.updateTransaction(transaction);
-		} else {
-			throw new InvalidTransactionObjectException("Invalid Transaction object. Ensure fields are correct");
-		}
-		return updatedTransaction;
+	    
+	    if (transaction == null) {
+	        throw new InvalidTransactionObjectException("Invalid Transaction object. Cannot update a null transaction.");
+	    }
+
+	   Transaction updatedTransaction = iTransactionDAO.updateTransaction(transaction);
+
+	    
+	    if (updatedTransaction == null) {
+	        throw new InvalidTransactionObjectException("Transaction with ID '" + transaction.getTransactionId() + "' not found for update, or update failed.");
+	    }
+
+	    return updatedTransaction;
 	}
+	
+	
 
 }

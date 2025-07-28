@@ -138,10 +138,11 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	@Override
 	public Transaction createTransaction(Transaction transaction) {
-		if (transactions.add(transaction)) {
-			return transactions.getLast();
-		}
-		return null;
+	    if (transactions.add(transaction)) {
+	        // Get the last element of the list, which is the one just added
+	        return transactions.get(transactions.size() - 1);
+	    }
+	    return null;
 	}
 
 	@Override
@@ -152,14 +153,16 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	@Override
 	public Transaction updateTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return null; 
+        }
 		for (int i = 0; i < transactions.size(); i++) {
 			Transaction tr = transactions.get(i);
-			if (tr.getTransactionId().equals(transaction.getTransactionId())) {
+			if (tr != null && tr.getTransactionId().equals(transaction.getTransactionId())) {
 				transactions.set(i, transaction);
 				return transactions.get(i);
 			}
 		}
 		return null;	
 	}
-
 }
