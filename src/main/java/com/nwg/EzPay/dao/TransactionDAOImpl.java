@@ -1,17 +1,14 @@
 package com.nwg.EzPay.dao;
 
 import java.util.List;
-import java.awt.font.TransformAttribute;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLNonTransientConnectionException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 import com.nwg.EzPay.model.Transaction;
 
@@ -90,7 +87,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	}
 
 	@Override
-	public List<Transaction> getTranstaionByDate(Date date) {
+	public List<Transaction> getTransactionByDate(Date date) {
 		List<Transaction> transactionsByDate = new ArrayList<Transaction>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -110,14 +107,13 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	@Override
 	public List<Transaction> getTransactionByDateRange(Date startDate, Date endDate) {
-		// TODO Auto-generated method stub
 		List<Transaction> transactionsByDateRange = new ArrayList<Transaction>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			for (Transaction transaction : transactions) {
 				Date transactionDate = transaction.getDate();
 				transactionDate = sdf.parse(sdf.format(transactionDate));
-				if (transactionDate.compareTo(startDate) <= 0 && transactionDate.compareTo(endDate) >= 0) {
+				if (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0) {
 					transactionsByDateRange.add(transaction);
 				}
 			}
@@ -141,40 +137,29 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	}
 
 	@Override
-	public boolean createTransaction(Transaction transaction) {
-		return transactions.add(transaction);
-	}
-
-	@Override
-	public boolean deleteTransaction(Transaction transaction) {
-		boolean status = false;
-		for (Transaction tr : transactions) {
-			if (tr.getTransactionId().equals(transaction.getTransactionId())) {
-				transactions.remove(tr);
-				status = true;
-				break;
-			}
+	public Transaction createTransaction(Transaction transaction) {
+		if (transactions.add(transaction)) {
+			return transactions.getLast();
 		}
-		return status;
+		return null;
 	}
 
 	@Override
-	public boolean readTransaction(Transaction transaction) {
-
-		return false;
+	public boolean deleteTransaction(String transactionId) {
+		// removeIf() is a safer and concise way to remove items from list.
+		return transactions.removeIf(transaction -> transaction.getTransactionId().equals(transactionId));
 	}
 
 	@Override
-	public boolean updateTransaction(Transaction transaction) {
-		boolean status = false;
+	public Transaction updateTransaction(Transaction transaction) {
 		for (int i = 0; i < transactions.size(); i++) {
 			Transaction tr = transactions.get(i);
 			if (tr.getTransactionId().equals(transaction.getTransactionId())) {
 				transactions.set(i, transaction);
-				status = true;
+				return transactions.get(i);
 			}
 		}
-		return status;
+		return null;	
 	}
 
 }

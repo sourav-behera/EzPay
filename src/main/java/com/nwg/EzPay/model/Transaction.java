@@ -1,5 +1,6 @@
 package com.nwg.EzPay.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,6 @@ import java.util.Date;
  * 
  * @author : Sourav Behera
  * @version : 0.0.1
- * @date : 27-07-2025
  * 
  */
 

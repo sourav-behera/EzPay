@@ -5,6 +5,13 @@ import java.util.Date;
 
 import com.nwg.EzPay.model.Transaction;
 
+/**
+ * This interface contains method declaration for the Transaction DAO
+ * 
+ * @author Sourav Behera
+ * @version 0.0.1
+ */
+
 public interface ITransactionDAO {
 
 	/**
@@ -43,7 +50,7 @@ public interface ITransactionDAO {
 	 * @return {@code List<Transaction>} : List of transactions performed on the
 	 *         specified date.
 	 */
-	List<Transaction> getTranstaionByDate(Date date);
+	List<Transaction> getTransactionByDate(Date date);
 
 	/**
 	 * Returns {@code List<Transaction>} a list of transactions performed within the
@@ -68,11 +75,9 @@ public interface ITransactionDAO {
 	List<Transaction> getTransactionByAmountRange(Double startAmount, Double endAmount);
 
 	// CRUD Operation for single transactions
-	boolean createTransaction(Transaction transaction);
+	Transaction createTransaction(Transaction transaction);
 
-	boolean deleteTransaction(Transaction transaction);
+	boolean deleteTransaction(String transactionId);
 
-	boolean readTransaction(Transaction transaction);
-
-	boolean updateTransaction(Transaction transaction);
+	Transaction updateTransaction(Transaction transaction);
 }
