@@ -19,7 +19,7 @@ public interface ITransactionService {
 
 	List<Transaction> getTransactionByStatusService(String status) throws InvalidTransactionStatusException;
 
-	List<Transaction> getTranstaionByDateService(Date date) throws InvalidDateFormatException;
+	List<Transaction> getTransactionByDateService(Date date) throws InvalidDateFormatException;
 
 	List<Transaction> getTransactionByDateRangeService(Date startDate, Date endDate) throws InvalidDateFormatException, InvalidRangeException;
 

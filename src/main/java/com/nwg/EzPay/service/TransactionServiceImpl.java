@@ -17,7 +17,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	ITransactionDAO iTransactionDAO;
 
-	TransactionServiceImpl() {
+	public TransactionServiceImpl() {
 		iTransactionDAO = new TransactionDAOImpl();
 	}
 
@@ -58,7 +58,7 @@ public class TransactionServiceImpl implements ITransactionService {
 	}
 
 	@Override
-	public List<Transaction> getTranstaionByDateService(Date date) throws InvalidDateFormatException {
+	public List<Transaction> getTransactionByDateService(Date date) throws InvalidDateFormatException {
 		List<Transaction> transactionsByDate = null;
 		// TODO: Helper Function : Write helper method for date format check.
 		if(date != null) {
