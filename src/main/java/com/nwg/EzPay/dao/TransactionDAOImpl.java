@@ -88,6 +88,9 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	@Override
 	public List<Transaction> getTransactionByDate(Date date) {
+		if (date == null) {
+	        return new ArrayList<>();
+	    }
 		List<Transaction> transactionsByDate = new ArrayList<Transaction>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -107,6 +110,9 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	@Override
 	public List<Transaction> getTransactionByDateRange(Date startDate, Date endDate) {
+		if (startDate == null || endDate == null) {
+	        return null; 
+	    }
 		List<Transaction> transactionsByDateRange = new ArrayList<Transaction>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -138,11 +144,8 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	@Override
 	public Transaction createTransaction(Transaction transaction) {
-	    if (transactions.add(transaction)) {
-	        // Get the last element of the list, which is the one just added
-	        return transactions.get(transactions.size() - 1);
-	    }
-	    return null;
+	    transactions.add(transaction);
+	    return transactions.get(transactions.size() - 1);
 	}
 
 	@Override

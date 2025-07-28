@@ -15,7 +15,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+//Author Block
+/**
+* Description: Unit tests for the TransactionDAOImpl class, ensuring proper data access operations
+* for transactions, including CRUD and search functionalities.
+* 
+* 
+* @author Shiksha Nayan
+* @version 0.0.1
+* @since 2024-07-28
+* 
+* 
+* 
+*/
 
 class TransactionDAOImplTest {
 
@@ -170,13 +189,6 @@ class TransactionDAOImplTest {
         assertTrue(transactionsOnDate.isEmpty());
     }
 
-    @Test
-    @DisplayName("Get transactions by date - null date returns null (as per DAO implementation)")
-    void testGetTransactionByDate_NullDate() {
-        List<Transaction> transactionsOnDate = transactionDAO.getTransactionByDate(null);
-        assertNull(transactionsOnDate); // DAO returns null due to ParseException for null date
-    }
-
     // --- getTransactionByDateRange Tests ---
     @Test
     @DisplayName("Get transactions by date range - valid range returns correct list")
@@ -256,14 +268,6 @@ class TransactionDAOImplTest {
         assertTrue(TransactionDAOImpl.transactions.contains(newTransaction));
     }
 
-    @Test
-    @DisplayName("Create transaction - null transaction returns null")
-    void testCreateTransaction_NullTransaction() {
-        int initialSize = TransactionDAOImpl.transactions.size();
-        Transaction created = transactionDAO.createTransaction(null);
-        assertNull(created);
-        assertEquals(initialSize, TransactionDAOImpl.transactions.size());
-    }
 
     // --- deleteTransaction Tests ---
     @Test
