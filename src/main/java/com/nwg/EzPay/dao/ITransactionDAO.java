@@ -67,7 +67,7 @@ public interface ITransactionDAO {
 	 * Returns {@code List<Transaction>} a list of transactions whose amount lie
 	 * between the specified range.
 	 * 
-	 * @param startAmoutn : Start amount for the transactions.
+	 * @param startAmount : Start amount for the transactions.
 	 * @param endAmount   : End amount for the transactions.
 	 * @return {@code List<Transaction>} : List of transactions whose amount lie in
 	 *         the specified range.

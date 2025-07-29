@@ -1,6 +1,5 @@
 package com.nwg.EzPay.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**

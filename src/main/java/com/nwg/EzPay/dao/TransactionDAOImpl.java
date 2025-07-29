@@ -16,14 +16,14 @@ public class TransactionDAOImpl implements ITransactionDAO {
 
 	public static List<Transaction> transactions = new ArrayList<Transaction>();
 	static {
-		FileReader fr = null;
-		BufferedReader br = null;
+		FileReader fileReader = null;
+		BufferedReader bufferedReader = null;
 		try {
-			fr = new FileReader("data/transactions.csv");
-			br = new BufferedReader(fr);
+			fileReader = new FileReader("data/transactions.csv");
+			bufferedReader = new BufferedReader(fileReader);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String transactionDetailCSV = "";
-			while ((transactionDetailCSV = br.readLine()) != null) {
+			while ((transactionDetailCSV = bufferedReader.readLine()) != null) {
 				String details[] = transactionDetailCSV.split(",");
 				String transactionId = details[0];
 				String type = details[1];
@@ -42,11 +42,11 @@ public class TransactionDAOImpl implements ITransactionDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (br != null) {
-					br.close();
+				if (bufferedReader != null) {
+					bufferedReader.close();
 				}
-				if (fr != null) {
-					fr.close();
+				if (fileReader != null) {
+					fileReader.close();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -160,8 +160,8 @@ public class TransactionDAOImpl implements ITransactionDAO {
             return null; 
         }
 		for (int i = 0; i < transactions.size(); i++) {
-			Transaction tr = transactions.get(i);
-			if (tr != null && tr.getTransactionId().equals(transaction.getTransactionId())) {
+			Transaction existingTransaction = transactions.get(i);
+			if (existingTransaction != null && existingTransaction.getTransactionId().equals(transaction.getTransactionId())) {
 				transactions.set(i, transaction);
 				return transactions.get(i);
 			}
