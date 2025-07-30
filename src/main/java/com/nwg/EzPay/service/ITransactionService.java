@@ -1,15 +1,15 @@
-package com.nwg.EzPay.service;
+package com.nwg.ezpay.service;
 
 import java.util.List;
 import java.util.Date;
 
-import com.nwg.EzPay.exception.InvalidDateFormatException;
-import com.nwg.EzPay.exception.InvalidRangeException;
-import com.nwg.EzPay.exception.InvalidTransactionIDException;
-import com.nwg.EzPay.exception.InvalidTransactionObjectException;
-import com.nwg.EzPay.exception.InvalidTransactionStatusException;
-import com.nwg.EzPay.exception.InvalidTransactionTypeException;
-import com.nwg.EzPay.model.Transaction;
+import com.nwg.ezpay.exception.InvalidDateFormatException;
+import com.nwg.ezpay.exception.InvalidRangeException;
+import com.nwg.ezpay.exception.InvalidTransactionIDException;
+import com.nwg.ezpay.exception.InvalidTransactionObjectException;
+import com.nwg.ezpay.exception.InvalidTransactionStatusException;
+import com.nwg.ezpay.exception.InvalidTransactionTypeException;
+import com.nwg.ezpay.model.Transaction;
 
 public interface ITransactionService {
 

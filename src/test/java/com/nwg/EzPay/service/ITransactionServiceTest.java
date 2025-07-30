@@ -1,8 +1,10 @@
 package com.nwg.EzPay.service;
 
-import com.nwg.EzPay.exception.InvalidTransactionIDException;
-import com.nwg.EzPay.exception.InvalidTransactionTypeException;
-import com.nwg.EzPay.model.Transaction;
+import com.nwg.ezpay.exception.InvalidTransactionIDException;
+import com.nwg.ezpay.exception.InvalidTransactionTypeException;
+import com.nwg.ezpay.model.Transaction;
+import com.nwg.ezpay.service.TransactionServiceImpl;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

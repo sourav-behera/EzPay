@@ -1,4 +1,4 @@
-package com.nwg.EzPay.service;
+package com.nwg.ezpay.service;
 
 public class TransactionStatusServcieImpl {
 

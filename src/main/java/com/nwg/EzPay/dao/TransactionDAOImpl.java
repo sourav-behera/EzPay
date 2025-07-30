@@ -1,4 +1,4 @@
-package com.nwg.EzPay.dao;
+package com.nwg.ezpay.dao;
 
 import java.util.List;
 import java.io.BufferedReader;
@@ -10,11 +10,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.nwg.EzPay.model.Transaction;
+import com.nwg.ezpay.model.Transaction;
 
+/**
+ * This class contains the implementation for the transaction data access object.
+ * 
+ * @author Sourav Behera
+ * @version 0.0.1
+ */
 public class TransactionDAOImpl implements ITransactionDAO {
 
-	public static List<Transaction> transactions = new ArrayList<Transaction>();
+	public static List<Transaction> transactionsList = new ArrayList<Transaction>();
 	static {
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
@@ -31,7 +37,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 				String status = details[3];
 				Date date = sdf.parse(details[4]);
 				Transaction transaction = new Transaction(transactionId, type, amount, status, date);
-				transactions.add(transaction);
+				transactionsList.add(transaction);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -54,9 +60,16 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		}
 	}
 
+	/**
+	 * This method returns {@code Transaction} with the specified UID.
+	 *
+	 * @param transactionId : UID of the transaction
+	 * @return {@code Transaction} if transaction with {@code transactionId} is present
+	 * otherwise null
+	 */
 	@Override
 	public Transaction getTransactionById(String transactionId) {
-		for (Transaction transaction : transactions) {
+		for (Transaction transaction : transactionsList) {
 			if (transaction.getTransactionId().equals(transactionId)) {
 				return transaction;
 			}
@@ -64,10 +77,18 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return null;
 	}
 
+	/**
+	 * This method returns a {@code List<Transaction>} of {@code type}.
+	 * 
+	 * @param type : String either "upi" or "bank"
+	 * @return {@code List<Transaction>} if transactions of type {@code type} is present
+	 * else return empty list.
+	 * 
+	 */
 	@Override
 	public List<Transaction> getTransactionByType(String type) {
 		List<Transaction> transactionsByType = new ArrayList<Transaction>();
-		for (Transaction transaction : transactions) {
+		for (Transaction transaction : transactionsList) {
 			if (transaction.getType().equals(type)) {
 				transactionsByType.add(transaction);
 			}
@@ -75,10 +96,18 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return transactionsByType;
 	}
 
+	/**
+	 * This method returns a {@code List<Transaction>} with {@code status} status.
+	 * 
+	 * @param type : String either "initiated", "pending", "completed", "failed"
+	 * @return {@code List<Transaction>} if transactions of type {@code type} is present
+	 * else return empty list.
+	 * 
+	 */
 	@Override
 	public List<Transaction> getTransactionByStatus(String status) {
 		List<Transaction> transactionsByStatus = new ArrayList<Transaction>();
-		for (Transaction transaction : transactions) {
+		for (Transaction transaction : transactionsList) {
 			if (transaction.getStatus().equals(status)) {
 				transactionsByStatus.add(transaction);
 			}
@@ -86,6 +115,12 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return transactionsByStatus;
 	}
 
+	/**
+	 * This code returns a {@code List<Transaction>} performed on the specified date.
+	 * 
+	 * @param date : Date of transaction
+	 * @return {@code List<Transaction} : List of transactions performed on the specified date otherwise null.
+	 */
 	@Override
 	public List<Transaction> getTransactionByDate(Date date) {
 		if (date == null) {
@@ -94,7 +129,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		List<Transaction> transactionsByDate = new ArrayList<Transaction>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			for (Transaction transaction : transactions) {
+			for (Transaction transaction : transactionsList) {
 				Date transactionDate = transaction.getDate();
 				transactionDate = sdf.parse(sdf.format(transactionDate));
 				if (transactionDate.equals(date)) {
@@ -108,6 +143,14 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return null;
 	}
 
+	/**
+	 * This function returns the {@code List<Transaction>} which were performed between 
+	 * {@code startDate} and {@code endDate}
+	 * 
+	 * @param startDate : Start date of the range
+	 * @param endDate   : End date of the range
+	 * @return {@code List<Transaction>} : List of transactions performed in the date range otherwise empty list.
+	 */
 	@Override
 	public List<Transaction> getTransactionByDateRange(Date startDate, Date endDate) {
 		if (startDate == null || endDate == null) {
@@ -116,7 +159,7 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		List<Transaction> transactionsByDateRange = new ArrayList<Transaction>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			for (Transaction transaction : transactions) {
+			for (Transaction transaction : transactionsList) {
 				Date transactionDate = transaction.getDate();
 				transactionDate = sdf.parse(sdf.format(transactionDate));
 				if (transactionDate.compareTo(startDate) >= 0 && transactionDate.compareTo(endDate) <= 0) {
@@ -130,10 +173,18 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return null;
 	}
 
+	/**
+	 * This methods returns the {@code List<Transaction>} with amount within the specified range
+	 * 
+	 * @param startAmount : Lower bound of the amount range.
+	 * @param endAmount   : Upper bound of the amount range.
+	 * @return {@code List<Transaction>} : A list of transactions with amount in the specified range
+	 * other empty list.
+	 */
 	@Override
 	public List<Transaction> getTransactionByAmountRange(Double startAmount, Double endAmount) {
 		List<Transaction> transactionsByAmountRange = new ArrayList<Transaction>();
-		for (Transaction transaction : transactions) {
+		for (Transaction transaction : transactionsList) {
 			Double transactionAmount = transaction.getAmount();
 			if (startAmount <= transactionAmount && transactionAmount <= endAmount) {
 				transactionsByAmountRange.add(transaction);
@@ -142,28 +193,46 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return transactionsByAmountRange;
 	}
 
+	/**
+	 * @param transaction : {@code Transaction} object to insert into the transaction table.
+	 * @return {@code Transaction} : The transaction object that was created otherwise null;
+	 */
 	@Override
 	public Transaction createTransaction(Transaction transaction) {
-	    transactions.add(transaction);
-	    return transactions.get(transactions.size() - 1);
+	    transactionsList.add(transaction);
+	    return transactionsList.get(transactionsList.size() - 1);
 	}
 
+	/**
+	 * This function deletes a transaction with the {@code transactionId} UID from the transaction table.
+	 * 
+	 * @param transactionId : Transaction 
+	 * @return {@code boolean} : Returns true if deletion successful otherwise false;
+	 */
 	@Override
 	public boolean deleteTransaction(String transactionId) {
 		// removeIf() is a safer and concise way to remove items from list.
-		return transactions.removeIf(transaction -> transaction.getTransactionId().equals(transactionId));
+		return transactionsList.removeIf(transaction -> transaction.getTransactionId().equals(transactionId));
 	}
 
+	/**
+	 * This methods takes a {@code Transaction} object and updates the transaction
+	 * with the same UID in the transaction table.
+	 * 
+	 * @param transaction : {@code Transaction} object which holds updated data.
+	 * @return {@code Transaction} : Returns the updated transaction object if transaction present in 
+	 * transaction table otherwise null
+	 * */
 	@Override
 	public Transaction updateTransaction(Transaction transaction) {
         if (transaction == null) {
             return null; 
         }
-		for (int i = 0; i < transactions.size(); i++) {
-			Transaction existingTransaction = transactions.get(i);
+		for (int i = 0; i < transactionsList.size(); i++) {
+			Transaction existingTransaction = transactionsList.get(i);
 			if (existingTransaction != null && existingTransaction.getTransactionId().equals(transaction.getTransactionId())) {
-				transactions.set(i, transaction);
-				return transactions.get(i);
+				transactionsList.set(i, transaction);
+				return transactionsList.get(i);
 			}
 		}
 		return null;	

@@ -1,4 +1,4 @@
-package com.nwg.EzPay.exception;
+package com.nwg.ezpay.exception;
 
 public class InvalidTransactionTypeException extends Exception {
 

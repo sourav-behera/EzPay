@@ -1,9 +1,9 @@
-package com.nwg.EzPay.dao;
+package com.nwg.ezpay.dao;
 
 import java.util.List;
 import java.util.Date;
 
-import com.nwg.EzPay.model.Transaction;
+import com.nwg.ezpay.model.Transaction;
 
 /**
  * This interface contains method declaration for the Transaction DAO
@@ -37,7 +37,7 @@ public interface ITransactionDAO {
 	 * Returns {@code List<Transaction>} a list of transactions that have the
 	 * provided status.
 	 * 
-	 * @param status : Status of the transaction(initiated, pending, completed)
+	 * @param status : Status of the transaction(initiated, pending, completed, failed)
 	 * @return {@code List<Transaction>} : List of transactions that have the status
 	 */
 	List<Transaction> getTransactionByStatus(String status);
@@ -74,10 +74,27 @@ public interface ITransactionDAO {
 	 */
 	List<Transaction> getTransactionByAmountRange(Double startAmount, Double endAmount);
 
-	// CRUD Operation for single transactions
+	/**
+	 *	Insert a new {@code Transaction} into the transaction table.
+	 * 
+	 * @param transaction : Transaction object to enter
+	 * @return {@code Transaction}
+	 */
 	Transaction createTransaction(Transaction transaction);
 
+	/**
+	 *	Delete an existing {@code Transaction} from the transaction table.
+	 * 
+	 * @param transactionId : UID of the transaction to delete
+	 * @return {@code boolean} : {@code true} if successfully deleted otherwise {@code false}
+	 */
 	boolean deleteTransaction(String transactionId);
 
+	/**
+	 * Update a {@code Transaction} object in the transaction table.
+	 * 
+	 * @param transaction : transaction object to update
+	 * @return returns the transaction {@code Transaction}
+	 */
 	Transaction updateTransaction(Transaction transaction);
 }

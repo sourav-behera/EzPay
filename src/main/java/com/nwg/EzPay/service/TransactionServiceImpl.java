@@ -1,17 +1,17 @@
-package com.nwg.EzPay.service;
+package com.nwg.ezpay.service;
 
 import java.util.Date;
 import java.util.List;
 
-import com.nwg.EzPay.dao.ITransactionDAO;
-import com.nwg.EzPay.dao.TransactionDAOImpl;
-import com.nwg.EzPay.exception.InvalidDateFormatException;
-import com.nwg.EzPay.exception.InvalidRangeException;
-import com.nwg.EzPay.exception.InvalidTransactionIDException;
-import com.nwg.EzPay.exception.InvalidTransactionObjectException;
-import com.nwg.EzPay.exception.InvalidTransactionStatusException;
-import com.nwg.EzPay.exception.InvalidTransactionTypeException;
-import com.nwg.EzPay.model.Transaction;
+import com.nwg.ezpay.exception.InvalidDateFormatException;
+import com.nwg.ezpay.exception.InvalidRangeException;
+import com.nwg.ezpay.exception.InvalidTransactionIDException;
+import com.nwg.ezpay.exception.InvalidTransactionObjectException;
+import com.nwg.ezpay.exception.InvalidTransactionStatusException;
+import com.nwg.ezpay.exception.InvalidTransactionTypeException;
+import com.nwg.ezpay.model.Transaction;
+import com.nwg.ezpay.dao.ITransactionDAO;
+import com.nwg.ezpay.dao.TransactionDAOImpl;
 
 public class TransactionServiceImpl implements ITransactionService {
 
@@ -21,6 +21,7 @@ public class TransactionServiceImpl implements ITransactionService {
 		iTransactionDAO = new TransactionDAOImpl();
 	}
 
+	
 	@Override
 	public Transaction getTransactionByIdService(String transactionID) throws InvalidTransactionIDException {
 		Transaction transaction = null;
@@ -48,7 +49,7 @@ public class TransactionServiceImpl implements ITransactionService {
 	public List<Transaction> getTransactionByStatusService(String status) throws InvalidTransactionStatusException {
 		List<Transaction> transactionsByStatus = null;
 		if (status != null && (status.equals("initiated") || status.equals("pending") || status.equals("completed")
-				|| status.equals("pending"))) {
+				|| status.equals("failed"))) {
 			transactionsByStatus = iTransactionDAO.getTransactionByStatus(status);
 		} else {
 			throw new InvalidTransactionStatusException(
@@ -61,8 +62,8 @@ public class TransactionServiceImpl implements ITransactionService {
 	public List<Transaction> getTransactionByDateService(Date date) throws InvalidDateFormatException {
 		List<Transaction> transactionsByDate = null;
 		// TODO: Helper Function : Write helper method for date format check.
-		if(date != null) {
-			transactionsByDate = iTransactionDAO.getTransactionByDate(date);		
+		if (date != null) {
+			transactionsByDate = iTransactionDAO.getTransactionByDate(date);
 		} else {
 			throw new InvalidDateFormatException("Invalid date format");
 		}
@@ -70,14 +71,14 @@ public class TransactionServiceImpl implements ITransactionService {
 	}
 
 	@Override
-	public List<Transaction> getTransactionByDateRangeService(Date startDate, Date endDate) throws InvalidDateFormatException, InvalidRangeException{
+	public List<Transaction> getTransactionByDateRangeService(Date startDate, Date endDate)
+			throws InvalidDateFormatException, InvalidRangeException {
 		// TODO: Helper Function : Write helper method for date format check.
 		List<Transaction> transactionsByDateRange = null;
 		if (startDate.compareTo(endDate) > 0) {
 			throw new InvalidRangeException("Start should be smaller or equal to end.");
-		} 
-		else {
-			transactionsByDateRange = iTransactionDAO.getTransactionByDateRange(startDate, endDate);			
+		} else {
+			transactionsByDateRange = iTransactionDAO.getTransactionByDateRange(startDate, endDate);
 		}
 		return transactionsByDateRange;
 	}
@@ -118,21 +119,20 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	@Override
 	public Transaction updateTransactionService(Transaction transaction) throws InvalidTransactionObjectException {
-	    
-	    if (transaction == null) {
-	        throw new InvalidTransactionObjectException("Invalid Transaction object. Cannot update a null transaction.");
-	    }
 
-	   Transaction updatedTransaction = iTransactionDAO.updateTransaction(transaction);
+		if (transaction == null) {
+			throw new InvalidTransactionObjectException(
+					"Invalid Transaction object. Cannot update a null transaction.");
+		}
 
-	    
-	    if (updatedTransaction == null) {
-	        throw new InvalidTransactionObjectException("Transaction with ID '" + transaction.getTransactionId() + "' not found for update, or update failed.");
-	    }
+		Transaction updatedTransaction = iTransactionDAO.updateTransaction(transaction);
 
-	    return updatedTransaction;
+		if (updatedTransaction == null) {
+			throw new InvalidTransactionObjectException("Transaction with ID '" + transaction.getTransactionId()
+					+ "' not found for update, or update failed.");
+		}
+
+		return updatedTransaction;
 	}
-	
-	
 
 }

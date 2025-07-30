@@ -1,6 +1,9 @@
 package com.nwg.EzPay.dao;
 
-import com.nwg.EzPay.model.Transaction;
+import com.nwg.ezpay.model.Transaction;
+import com.nwg.ezpay.dao.ITransactionDAO;
+import com.nwg.ezpay.dao.TransactionDAOImpl;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +62,7 @@ class TransactionDAOImplTest {
         }
 
         // Clear and reload the static transactions list in DAO for fresh state.
-        TransactionDAOImpl.transactions.clear();
+        TransactionDAOImpl.transactionsList.clear();
         try (BufferedReader br = new BufferedReader(new FileReader("data/transactions.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -69,7 +72,7 @@ class TransactionDAOImplTest {
                 Double amount = Double.parseDouble(details[2]);
                 String status = details[3];
                 Date date = dateTimeSdf.parse(details[4]);
-                TransactionDAOImpl.transactions.add(new Transaction(transactionId, type, amount, status, date));
+                TransactionDAOImpl.transactionsList.add(new Transaction(transactionId, type, amount, status, date));
             }
         } catch (ParseException e) {
             fail("Failed to parse initial CSV data during setup: " + e.getMessage());
@@ -81,7 +84,7 @@ class TransactionDAOImplTest {
     @AfterEach
     void tearDown() throws IOException {
         // Clear the static list after each test.
-        TransactionDAOImpl.transactions.clear();
+        TransactionDAOImpl.transactionsList.clear();
         // Clear the CSV file as well to ensure a clean slate.
         try (FileWriter writer = new FileWriter("data/transactions.csv")) {
             writer.write("");
@@ -258,14 +261,14 @@ class TransactionDAOImplTest {
     @Test
     @DisplayName("Create transaction - new valid transaction")
     void testCreateTransaction_NewValidTransaction() throws ParseException {
-        int initialSize = TransactionDAOImpl.transactions.size();
+        int initialSize = TransactionDAOImpl.transactionsList.size();
         Transaction newTransaction = new Transaction("TRX007", "netbanking", 500.00, "completed", dateTimeSdf.parse("2024-07-23 10:00:00"));
         Transaction created = transactionDAO.createTransaction(newTransaction);
 
         assertNotNull(created);
-        assertEquals(initialSize + 1, TransactionDAOImpl.transactions.size());
+        assertEquals(initialSize + 1, TransactionDAOImpl.transactionsList.size());
         assertEquals(newTransaction, created);
-        assertTrue(TransactionDAOImpl.transactions.contains(newTransaction));
+        assertTrue(TransactionDAOImpl.transactionsList.contains(newTransaction));
     }
 
 
@@ -273,31 +276,31 @@ class TransactionDAOImplTest {
     @Test
     @DisplayName("Delete transaction - existing ID returns true and removes transaction")
     void testDeleteTransaction_ExistingId() {
-        int initialSize = TransactionDAOImpl.transactions.size();
+        int initialSize = TransactionDAOImpl.transactionsList.size();
         boolean deleted = transactionDAO.deleteTransaction("TRX001");
 
         assertTrue(deleted);
-        assertEquals(initialSize - 1, TransactionDAOImpl.transactions.size());
+        assertEquals(initialSize - 1, TransactionDAOImpl.transactionsList.size());
         assertNull(transactionDAO.getTransactionById("TRX001"));
     }
 
     @Test
     @DisplayName("Delete transaction - non-existing ID returns false and no change in size")
     void testDeleteTransaction_NonExistingId() {
-        int initialSize = TransactionDAOImpl.transactions.size();
+        int initialSize = TransactionDAOImpl.transactionsList.size();
         boolean deleted = transactionDAO.deleteTransaction("NONEXISTENT");
 
         assertFalse(deleted);
-        assertEquals(initialSize, TransactionDAOImpl.transactions.size());
+        assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
     }
 
     @Test
     @DisplayName("Delete transaction - null ID returns false and no change in size")
     void testDeleteTransaction_NullId() {
-        int initialSize = TransactionDAOImpl.transactions.size();
+        int initialSize = TransactionDAOImpl.transactionsList.size();
         boolean deleted = transactionDAO.deleteTransaction(null);
         assertFalse(deleted);
-        assertEquals(initialSize, TransactionDAOImpl.transactions.size());
+        assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
     }
 
     // --- updateTransaction Tests ---
@@ -320,22 +323,22 @@ class TransactionDAOImplTest {
     @Test
     @DisplayName("Update transaction - non-existing ID returns null")
     void testUpdateTransaction_NonExistingId() throws ParseException {
-        int initialSize = TransactionDAOImpl.transactions.size();
+        int initialSize = TransactionDAOImpl.transactionsList.size();
         Transaction nonExistingTransaction = new Transaction(
                 "NONEXISTENT", "test", 0.0, "test", dateTimeSdf.parse("2024-01-01 00:00:00"));
 
         Transaction returnedTransaction = transactionDAO.updateTransaction(nonExistingTransaction);
 
         assertNull(returnedTransaction);
-        assertEquals(initialSize, TransactionDAOImpl.transactions.size());
+        assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
     }
 
     @Test
     @DisplayName("Update transaction - null transaction returns null")
     void testUpdateTransaction_NullTransaction() {
-        int initialSize = TransactionDAOImpl.transactions.size();
+        int initialSize = TransactionDAOImpl.transactionsList.size();
         Transaction returnedTransaction = transactionDAO.updateTransaction(null);
         assertNull(returnedTransaction);
-        assertEquals(initialSize, TransactionDAOImpl.transactions.size());
+        assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
     }
 }

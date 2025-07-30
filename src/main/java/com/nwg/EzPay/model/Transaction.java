@@ -1,4 +1,4 @@
-package com.nwg.EzPay.model;
+package com.nwg.ezpay.model;
 
 import java.util.Date;
 
@@ -35,6 +35,13 @@ public class Transaction {
 	 *                       "yyyy-MM-dd HH:mm:ss"
 	 */
 
+	/**
+	 * @param transactionId : UID of the transaction
+	 * @param type			: type of transaction ("upi" or "bank
+	 * @param amount
+	 * @param status
+	 * @param date
+	 */
 	public Transaction(String transactionId, String type, Double amount, String status, Date date) {
 		super();
 		this.transactionId = transactionId;
@@ -84,9 +91,11 @@ public class Transaction {
 		this.date = date;
 	}
 
-	public void reviewTransaction() {
-
-	}
+	
+	// Was mentioned in the BRD. Not sure what to do about it.
+//	public void reviewTransaction() {
+//
+//	}
 
 	@Override
 	public String toString() {

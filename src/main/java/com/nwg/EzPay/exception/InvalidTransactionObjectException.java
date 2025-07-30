@@ -1,4 +1,4 @@
-package com.nwg.EzPay.exception;
+package com.nwg.ezpay.exception;
 
 public class InvalidTransactionObjectException extends Exception {
 	private static final long serialVersionUID = 1L;
