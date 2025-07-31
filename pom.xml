@@ -8,7 +8,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>EzPay</name>
+  <name>ezpay</name>
   <url>http://maven.apache.org</url>
 
   <properties>
