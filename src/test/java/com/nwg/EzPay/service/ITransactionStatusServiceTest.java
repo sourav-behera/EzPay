@@ -1,27 +1,40 @@
 package com.nwg.EzPay.service;
 
-import com.nwg.EzPay.exception.*;
+import com.nwg.EzPay.exception.InvalidDateFormatException;
+import com.nwg.EzPay.exception.InvalidRangeException;
+import com.nwg.EzPay.exception.InvalidTransactionStatusException;
+import com.nwg.EzPay.exception.InvalidTransactionStatusIdException;
+import com.nwg.EzPay.exception.InvalidTransactionStatusObjectException;
 import com.nwg.EzPay.model.TransactionStatus;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for {@link TransactionStatusServiceImpl} focusing on 
  * correctness and validation of business rules and data handling.
- *
+ * 
  * @author Param Shah
  * @version 0.0.1
  * @since 2025-07-29
  */
 class TransactionStatusServiceTest {
 
-    private TransactionStatusServiceImpl service;
+    private TransactionStatusServiceImpl transactionStatusService;
+
     private static final String TEST_DATA =
         "TS001,completed,Success,2025-07-28 10:00:00\n" +
         "TS002,failed,Network issue,2025-07-28 12:30:00\n" +
@@ -33,7 +46,7 @@ class TransactionStatusServiceTest {
         try (FileWriter writer = new FileWriter("data/transaction_statuses.csv")) {
             writer.write(TEST_DATA);
         }
-        service = new TransactionStatusServiceImpl();
+        transactionStatusService = new TransactionStatusServiceImpl();
     }
 
     @AfterEach
@@ -43,21 +56,19 @@ class TransactionStatusServiceTest {
         }
     }
 
-    // --- Get By ID Tests ---
-
     @Test
     @DisplayName("Get status by ID - valid existing ID")
     void testGetStatusById_Valid() throws InvalidTransactionStatusIdException {
-        TransactionStatus ts = service.getStatusByIdService("TS001");
-        assertNotNull(ts);
-        assertEquals("TS001", ts.getTransactionId());
+        TransactionStatus transactionStatus = transactionStatusService.getStatusByIdService("TS001");
+        assertNotNull(transactionStatus);
+        assertEquals("TS001", transactionStatus.getTransactionId());
     }
 
     @Test
     @DisplayName("Get status by ID - non-existing ID throws exception")
     void testGetStatusById_NonExisting() {
         assertThrows(InvalidTransactionStatusIdException.class, () -> {
-            service.getStatusByIdService("TS999");
+            transactionStatusService.getStatusByIdService("TS999");
         });
     }
 
@@ -65,140 +76,126 @@ class TransactionStatusServiceTest {
     @DisplayName("Get status by ID - null throws exception")
     void testGetStatusById_NullId() {
         assertThrows(InvalidTransactionStatusIdException.class, () -> {
-            service.getStatusByIdService(null);
+            transactionStatusService.getStatusByIdService(null);
         });
     }
-
-    // --- Get By Type Tests ---
 
     @Test
     @DisplayName("Get statuses by type - valid")
     void testGetStatusesByType_Valid() throws InvalidTransactionStatusException {
-        List<TransactionStatus> statuses = service.getStatusesByTypeService("completed");
-        assertEquals(2, statuses.size());
-        assertTrue(statuses.stream().allMatch(ts -> ts.getStatusType().equals("completed")));
+        List<TransactionStatus> transactionStatusList = transactionStatusService.getStatusesByTypeService("completed");
+        assertEquals(2, transactionStatusList.size());
+        assertTrue(transactionStatusList.stream().allMatch(status -> status.getStatusType().equals("completed")));
     }
 
     @Test
     @DisplayName("Get statuses by type - null throws exception")
     void testGetStatusesByType_Null() {
         assertThrows(InvalidTransactionStatusException.class, () -> {
-            service.getStatusesByTypeService(null);
+            transactionStatusService.getStatusesByTypeService(null);
         });
     }
-
-    // --- Get By Reason Tests ---
 
     @Test
     @DisplayName("Get statuses by reason - valid")
     void testGetStatusesByReason_Valid() throws InvalidTransactionStatusException {
-        List<TransactionStatus> statuses = service.getStatusesByReasonService("Success");
-        assertEquals(1, statuses.size());
+        List<TransactionStatus> transactionStatusList = transactionStatusService.getStatusesByReasonService("Success");
+        assertEquals(1, transactionStatusList.size());
     }
 
     @Test
     @DisplayName("Get statuses by reason - empty throws exception")
     void testGetStatusesByReason_Empty() {
         assertThrows(InvalidTransactionStatusException.class, () -> {
-            service.getStatusesByReasonService("");
+            transactionStatusService.getStatusesByReasonService("");
         });
     }
-
-    // --- Get By Date Tests ---
 
     @Test
     @DisplayName("Get statuses by date - valid match")
     void testGetStatusesByDate_Valid() throws InvalidDateFormatException {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2025, Calendar.JULY, 29); // 2025-07-29
-        List<TransactionStatus> statuses = service.getStatusesByDateService(cal.getTime());
-        assertEquals(2, statuses.size());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2025, Calendar.JULY, 29);
+        List<TransactionStatus> transactionStatusList = transactionStatusService.getStatusesByDateService(calendar.getTime());
+        assertEquals(2, transactionStatusList.size());
     }
 
     @Test
     @DisplayName("Get statuses by date - null throws exception")
     void testGetStatusesByDate_Null() {
         assertThrows(InvalidDateFormatException.class, () -> {
-            service.getStatusesByDateService(null);
+            transactionStatusService.getStatusesByDateService(null);
         });
     }
-
-    // --- Get By Date Range Tests ---
 
     @Test
     @DisplayName("Get statuses by date range - valid")
     void testGetStatusesByDateRange_Valid() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date start = sdf.parse("2025-07-28");
-        Date end = sdf.parse("2025-07-29");
-        List<TransactionStatus> statuses = service.getStatusesByDateRangeService(start, end);
-        assertEquals(4, statuses.size());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = dateFormat.parse("2025-07-28");
+        Date endDate = dateFormat.parse("2025-07-29");
+        List<TransactionStatus> transactionStatusList = transactionStatusService.getStatusesByDateRangeService(startDate, endDate);
+        assertEquals(4, transactionStatusList.size());
     }
 
     @Test
     @DisplayName("Get statuses by date range - invalid range throws exception")
     void testGetStatusesByDateRange_InvalidRange() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date start = sdf.parse("2025-07-30");
-        Date end = sdf.parse("2025-07-29");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = dateFormat.parse("2025-07-30");
+        Date endDate = dateFormat.parse("2025-07-29");
 
         assertThrows(InvalidRangeException.class, () -> {
-            service.getStatusesByDateRangeService(start, end);
+            transactionStatusService.getStatusesByDateRangeService(startDate, endDate);
         });
     }
-
-    // --- Create Tests ---
 
     @Test
     @DisplayName("Create new transaction status - valid object")
     void testCreateStatus_Valid() throws InvalidTransactionStatusObjectException {
-        TransactionStatus ts = new TransactionStatus("TS005", "pending", "Awaiting approval", new Date());
-        TransactionStatus created = service.createStatusService(ts);
-        assertNotNull(created);
-        assertEquals("TS005", created.getTransactionId());
+        TransactionStatus newTransactionStatus = new TransactionStatus("TS005", "pending", "Awaiting approval", new Date());
+        TransactionStatus createdStatus = transactionStatusService.createStatusService(newTransactionStatus);
+        assertNotNull(createdStatus);
+        assertEquals("TS005", createdStatus.getTransactionId());
     }
 
     @Test
     @DisplayName("Create new transaction status - null object throws exception")
     void testCreateStatus_Null() {
         assertThrows(InvalidTransactionStatusObjectException.class, () -> {
-            service.createStatusService(null);
+            transactionStatusService.createStatusService(null);
         });
     }
-
-    // --- Update Tests ---
 
     @Test
     @DisplayName("Update existing status - valid object")
     void testUpdateStatus_Valid() throws InvalidTransactionStatusObjectException {
-        TransactionStatus ts = new TransactionStatus("TS003", "completed", "Auto-resolved", new Date());
-        TransactionStatus updated = service.updateStatusService(ts);
-        assertNotNull(updated);
-        assertEquals("completed", updated.getStatusType());
+        TransactionStatus updatedTransactionStatus = new TransactionStatus("TS003", "completed", "Auto-resolved", new Date());
+        TransactionStatus returnedStatus = transactionStatusService.updateStatusService(updatedTransactionStatus);
+        assertNotNull(returnedStatus);
+        assertEquals("completed", returnedStatus.getStatusType());
     }
 
     @Test
     @DisplayName("Update status - null object throws exception")
     void testUpdateStatus_Null() {
         assertThrows(InvalidTransactionStatusObjectException.class, () -> {
-            service.updateStatusService(null);
+            transactionStatusService.updateStatusService(null);
         });
     }
-
-    // --- Delete Tests ---
 
     @Test
     @DisplayName("Delete status by ID - existing ID")
     void testDeleteStatus_Valid() throws InvalidTransactionStatusIdException {
-        boolean result = service.deleteStatusService("TS004");
-        assertTrue(result);
+        boolean deletionResult = transactionStatusService.deleteStatusService("TS004");
+        assertTrue(deletionResult);
     }
 
     @Test
     @DisplayName("Delete status by ID - non-existing ID throws exception")
     void testDeleteStatus_NonExisting() {
         assertThrows(InvalidTransactionStatusIdException.class, () -> {
-            service.deleteStatusService("TS999");
+            transactionStatusService.deleteStatusService("TS999");
         });
     }
 }
