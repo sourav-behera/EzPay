@@ -1,4 +1,4 @@
-package com.nwg.EzPay.service;
+package com.nwg.ezpay.service;
 
 import com.nwg.ezpay.exception.InvalidTransactionIDException;
 import com.nwg.ezpay.exception.InvalidTransactionTypeException;
