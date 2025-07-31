@@ -1,8 +1,6 @@
-package com.nwg.EzPay.dao;
+package com.nwg.ezpay.dao;
 
 import com.nwg.ezpay.model.Transaction;
-import com.nwg.ezpay.dao.ITransactionDAO;
-import com.nwg.ezpay.dao.TransactionDAOImpl;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
