@@ -32,17 +32,33 @@ public class TransactionStatus{
 	}
 	
 	//Getters and Setters
-	public String getTransactionId() {return transactionStatusId;}
-	public void setTransactionId(String transactionId) {this.transactionStatusId = transactionId;}
+	public String getTransactionStatusId() {
+		return transactionStatusId;
+	}
+	public void setTransactionStatusId(String transactionStatusId) {
+		this.transactionStatusId = transactionStatusId;
+	}
 	
-	public String getStatusType() {return statusType;}
-	public void setStatusType(String statusType) {this.statusType = statusType;}
+	public String getStatusType() {
+		return statusType;
+	}
+	public void setStatusType(String statusType) {
+		this.statusType = statusType;
+	}
 	
-	public String getReason() {return reason;}
-	public void setReason(String reason) {this.reason = reason;}
+	public String getReason() {
+		return reason;
+	}
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
 	
-	public Date getTimestamp() {return timestamp;}
-	public void setTimestamp(Date timestamp) {this.timestamp = timestamp;}
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
 	
 	
 	@Override

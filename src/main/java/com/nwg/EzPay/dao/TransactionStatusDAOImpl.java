@@ -17,14 +17,14 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     public static List<TransactionStatus> transactionStatuses = new ArrayList<>();
 
     static {
-        FileReader fr = null;
-        BufferedReader br = null;
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
         try {
-            fr = new FileReader("data/transaction_statuses.csv");
-            br = new BufferedReader(fr);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            fileReader = new FileReader("data/transaction_statuses.csv");
+            bufferedReader = new BufferedReader(fileReader);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String line = null;
-            while ((line = br.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 String[] details = line.split(",");
                 if (details.length < 4) {
                     continue; // skip invalid lines
@@ -32,9 +32,9 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
                 String transactionStatusId = details[0];
                 String statusType = details[1];
                 String reason = details[2];
-                Date timestamp = sdf.parse(details[3]);
-                TransactionStatus ts = new TransactionStatus(transactionStatusId, statusType, reason, timestamp);
-                transactionStatuses.add(ts);
+                Date timestamp = simpleDateFormat.parse(details[3]);
+                TransactionStatus transactionStatus = new TransactionStatus(transactionStatusId, statusType, reason, timestamp);
+                transactionStatuses.add(transactionStatus);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -45,8 +45,8 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (br != null) br.close();
-                if (fr != null) fr.close();
+                if (bufferedReader != null) bufferedReader.close();
+                if (fileReader != null) fileReader.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -55,9 +55,9 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
 
     @Override
     public TransactionStatus getStatusById(String transactionStatusId) {
-        for (TransactionStatus ts : transactionStatuses) {
-            if (ts.getTransactionId().equals(transactionStatusId)) {
-                return ts;
+        for (TransactionStatus transactionStatus : transactionStatuses) {
+            if (transactionStatus.getTransactionStatusId().equals(transactionStatusId)) {
+                return transactionStatus;
             }
         }
         return null;
@@ -66,9 +66,9 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     @Override
     public List<TransactionStatus> getStatusesByType(String statusType) {
         List<TransactionStatus> list = new ArrayList<>();
-        for (TransactionStatus ts : transactionStatuses) {
-            if (ts.getStatusType().equals(statusType)) {
-                list.add(ts);
+        for (TransactionStatus transactionStatus : transactionStatuses) {
+            if (transactionStatus.getStatusType().equals(statusType)) {
+                list.add(transactionStatus);
             }
         }
         return list;
@@ -77,9 +77,9 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     @Override
     public List<TransactionStatus> getStatusesByReason(String reason) {
         List<TransactionStatus> list = new ArrayList<>();
-        for (TransactionStatus ts : transactionStatuses) {
-            if (ts.getReason().equals(reason)) {
-                list.add(ts);
+        for (TransactionStatus transactionStatus : transactionStatuses) {
+            if (transactionStatus.getReason().equals(reason)) {
+                list.add(transactionStatus);
             }
         }
         return list;
@@ -88,13 +88,13 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     @Override
     public List<TransactionStatus> getStatusesByDate(Date date) {
         List<TransactionStatus> list = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date targetDate = sdf.parse(sdf.format(date));
-            for (TransactionStatus ts : transactionStatuses) {
-                Date tsDate = sdf.parse(sdf.format(ts.getTimestamp()));
+            Date targetDate = simpleDateFormat.parse(simpleDateFormat.format(date));
+            for (TransactionStatus transactionStatus : transactionStatuses) {
+                Date tsDate = simpleDateFormat.parse(simpleDateFormat.format(transactionStatus.getTimestamp()));
                 if (tsDate.equals(targetDate)) {
-                    list.add(ts);
+                    list.add(transactionStatus);
                 }
             }
             return list;
@@ -107,14 +107,14 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     @Override
     public List<TransactionStatus> getStatusesByDateRange(Date startDate, Date endDate) {
         List<TransactionStatus> list = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date sDate = sdf.parse(sdf.format(startDate));
-            Date eDate = sdf.parse(sdf.format(endDate));
-            for (TransactionStatus ts : transactionStatuses) {
-                Date tsDate = sdf.parse(sdf.format(ts.getTimestamp()));
+            Date sDate = simpleDateFormat.parse(simpleDateFormat.format(startDate));
+            Date eDate = simpleDateFormat.parse(simpleDateFormat.format(endDate));
+            for (TransactionStatus transactionStatus : transactionStatuses) {
+                Date tsDate = simpleDateFormat.parse(simpleDateFormat.format(transactionStatus.getTimestamp()));
                 if (tsDate.compareTo(sDate) >= 0 && tsDate.compareTo(eDate) <= 0) {
-                    list.add(ts);
+                    list.add(transactionStatus);
                 }
             }
             return list;
@@ -135,8 +135,8 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     @Override
     public TransactionStatus updateStatus(TransactionStatus transactionStatus) {
         for (int i = 0; i < transactionStatuses.size(); i++) {
-            TransactionStatus ts = transactionStatuses.get(i);
-            if (ts.getTransactionId().equals(transactionStatus.getTransactionId())) {
+            TransactionStatus tranStatus = transactionStatuses.get(i);
+            if (tranStatus.getTransactionStatusId().equals(transactionStatus.getTransactionStatusId())) {
                 transactionStatuses.set(i, transactionStatus);
                 return transactionStatuses.get(i);
             }
@@ -146,6 +146,6 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
 
     @Override
     public boolean deleteStatusById(String transactionStatusId) {
-        return transactionStatuses.removeIf(ts -> ts.getTransactionId().equals(transactionStatusId));
+        return transactionStatuses.removeIf(ts -> ts.getTransactionStatusId().equals(transactionStatusId));
     }
 }
