@@ -6,6 +6,8 @@ import com.nwg.ezpay.exception.InvalidTransactionStatusException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusIdException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusObjectException;
 import com.nwg.ezpay.model.TransactionStatus;
+import com.nwg.ezpay.service.TransactionStatusServiceImpl;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -10,6 +10,8 @@ import com.nwg.ezpay.model.Transaction;
  * 
  * @author Sourav Behera
  * @version 0.0.1
+ * @since 2025-07-28
+ * @revised 2025-08-01
  */
 
 public interface ITransactionDAO {
