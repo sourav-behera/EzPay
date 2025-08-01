@@ -12,19 +12,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -73,7 +73,6 @@ class ITransactionServiceTest {
     }
 
 
-    
     /**
      * Cleans up the testing environment after each test method.
      * This ensures a clean slate for subsequent tests by clearing the file.
@@ -88,199 +87,126 @@ class ITransactionServiceTest {
     }
 
 
-    
     // --- getTransactionByIDService Tests ---
     /**
-     * Tests the successful retrieval of a transaction using an existing ID.
-     * Verifies that the returned transaction is not null and has the correct ID and type.
+     * Unit tests for the {@code TransactionServiceImpl.getTransactionByIdService} method.
+     * This suite verifies the method's behavior with various inputs,
+     * including valid, non-existent, null, and empty IDs to ensure robustness and proper exception handling.
      */
     @Test
-    @DisplayName("Get by ID - existing ID returns correct transaction")
-    void testGetTransactionByIDService_ExistingID() throws InvalidTransactionIDException {
+    @DisplayName("Get by ID service - handles existing, non-existing, null, and empty IDs with correct return values or exceptions")
+    void testGetTransactionByIdService() throws InvalidTransactionIDException {
+    	
+        // Test case 1: Existing ID returns correct transaction
         Transaction found = transactionService.getTransactionByIdService("TRX001");
-        assertNotNull(found);
+        assertNotNull(found, "Existing ID should return a transaction.");
         assertEquals("TRX001", found.getTransactionId());
         assertEquals("upi", found.getType());
-    }
 
-    
-    
-    /**
-     * Tests the behavior when searching for a non-existent transaction ID.
-     * Verifies that the service correctly returns null.
-     */
-    @Test
-    @DisplayName("Get by ID - non-existing ID returns null")
-    void testGetTransactionByIDService_NonExistingIDReturnsNull() throws InvalidTransactionIDException {
-        Transaction found = transactionService.getTransactionByIdService("TRX999");
-        assertNull(found, "Non-existing ID should return null.");
-    }
-
-    
-    
-    /**
-     * Tests the exception handling when a null transaction ID is provided.
-     * Verifies that the service throws an {@link InvalidTransactionIDException}
-     * with the correct error message.
-     */
-    @Test
-    @DisplayName("Get by ID - null ID throws InvalidTransactionIDException")
-    void testGetTransactionByIDService_NullIDThrowsException() {
-        InvalidTransactionIDException exception = assertThrows(InvalidTransactionIDException.class, () -> {
+        // Test case 2: Non-existing ID returns null
+        Transaction nonExistingFound = transactionService.getTransactionByIdService("TRX999");
+        assertNull(nonExistingFound, "Non-existing ID should return null.");
+        
+        // Test case 3: Null ID throws InvalidTransactionIDException
+        InvalidTransactionIDException nullIdException = assertThrows(InvalidTransactionIDException.class, () -> {
             transactionService.getTransactionByIdService(null);
-        });
-        assertEquals("ID doesn't match transaction ID semantics.", exception.getMessage());
-    }
-
-    
-    
-    /**
-     * Tests the behavior when an empty string is provided as the transaction ID.
-     * This is an edge case that should result in no transaction being found, returning null.
-     */
-    @Test
-    @DisplayName("Get by ID - empty ID returns null")
-    void testGetTransactionByIDService_EmptyIDReturnsNull() throws InvalidTransactionIDException {
-        Transaction found = transactionService.getTransactionByIdService("");
-        assertNull(found, "Empty ID should return null.");
+        }, "Null ID should throw InvalidTransactionIDException.");
+        assertEquals("ID doesn't match transaction ID semantics.", nullIdException.getMessage());
+        
+        // Test case 4: Empty string ID returns null
+        Transaction emptyIdFound = transactionService.getTransactionByIdService("");
+        assertNull(emptyIdFound, "Empty ID should return null.");
     }
 
 
     
     // --- getTransactionByTypeService Tests ---
     /**
-     * Tests the successful retrieval of transactions for a valid type ("upi").
-     * Verifies that the returned list is not null, not empty, and contains the correct number
-     * of transactions of the specified type.
+     * Unit tests for the {@code TransactionServiceImpl.getTransactionByTypeService} method.
+     * This suite verifies the retrieval of transactions based on type, handling
+     * valid, invalid, and null inputs.
      */
     @Test
-    @DisplayName("Get transactions by type service - valid type returns list")
-    void testGetTransactionByTypeService_ValidTypeReturnsList() throws InvalidTransactionTypeException {
+    @DisplayName("Get by type service - handles valid, invalid, and null types with correct return values or exceptions")
+    void testGetTransactionByTypeService() throws InvalidTransactionTypeException {
+    	
+        // Test case 1: Valid type returns the correct list
         List<Transaction> upiTransactions = transactionService.getTransactionByTypeService("upi");
-        assertNotNull(upiTransactions);
-        assertFalse(upiTransactions.isEmpty());
+        assertNotNull(upiTransactions, "Valid type should return a non-null list.");
+        assertFalse(upiTransactions.isEmpty(), "List for valid type should not be empty.");
         assertEquals(3, upiTransactions.size());
         assertTrue(upiTransactions.stream().allMatch(t -> t.getType().equalsIgnoreCase("upi")));
-    }
 
-    
-    
-    /**
-     * Tests the exception handling when an invalid transaction type is provided.
-     * Verifies that the service throws an {@link InvalidTransactionTypeException}.
-     */
-    @Test
-    @DisplayName("Get transactions by type service - invalid type throws exception")
-    void testGetTransactionByTypeService_InvalidTypeThrowsException() {
+        // Test case 2: Invalid type throws InvalidTransactionTypeException
         assertThrows(InvalidTransactionTypeException.class, () -> {
             transactionService.getTransactionByTypeService("invalid");
         }, "Invalid transaction type should throw InvalidTransactionTypeException.");
-    }
 
-    
-    
-    /**
-     * Tests the exception handling for a type that is not in the list of valid types.
-     * Verifies that the service throws an {@link InvalidTransactionTypeException}.
-     */
-    @Test
-    @DisplayName("Get transactions by type service - non-existing type throws exception")
-    void testGetTransactionByTypeService_NonExistingTypeThrowsException() {
+        // Test case 3: Non-existing type throws InvalidTransactionTypeException
         assertThrows(InvalidTransactionTypeException.class, () -> {
             transactionService.getTransactionByTypeService("crypto");
         }, "Non-existing type that is not valid should throw InvalidTransactionTypeException.");
-    }
 
-    
-    
-    /**
-     * Tests the exception handling when a null transaction type is provided.
-     * Verifies that the service throws an {@link InvalidTransactionTypeException}.
-     */
-    @Test
-    @DisplayName("Get transactions by type service - null type throws InvalidTransactionTypeException")
-    void testGetTransactionByTypeService_NullTypeThrowsException() {
+        // Test case 4: Null type throws InvalidTransactionTypeException
         assertThrows(InvalidTransactionTypeException.class, () -> {
             transactionService.getTransactionByTypeService(null);
         }, "Null type should throw InvalidTransactionTypeException.");
     }
 
-    
 
+    
     // --- getTransactionByStatusService Tests ---
     /**
-     * Tests the successful retrieval of transactions for a valid status ("completed").
-     * Verifies the returned list is not null, not empty, and contains the correct number of transactions.
+     * Unit tests for the {@code TransactionServiceImpl.getTransactionByStatusService} method.
+     * This suite verifies the retrieval of transactions based on status, handling
+     * valid, invalid, and null inputs.
      */
     @Test
-    @DisplayName("Get transactions by status service - valid status returns list")
-    void testGetTransactionByStatusService_ValidStatusReturnsList() throws InvalidTransactionStatusException {
+    @DisplayName("Get by status service - handles valid, invalid, and null statuses with correct return values or exceptions")
+    void testGetTransactionByStatusService() throws InvalidTransactionStatusException {
+    	
+        // Test case 1: Valid status returns the correct list
         List<Transaction> completedTransactions = transactionService.getTransactionByStatusService("completed");
-        assertNotNull(completedTransactions);
-        assertFalse(completedTransactions.isEmpty());
+        assertNotNull(completedTransactions, "Valid status should return a non-null list.");
+        assertFalse(completedTransactions.isEmpty(), "List for valid status should not be empty.");
         assertEquals(2, completedTransactions.size());
         assertTrue(completedTransactions.stream().allMatch(t -> t.getStatus().equals("completed")));
-    }
-
-    
-    
-    /**
-     * Tests the exception handling when an invalid status string is provided.
-     * Verifies that the service throws an {@link InvalidTransactionStatusException}.
-     */
-    @Test
-    @DisplayName("Get transactions by status service - invalid status throws exception")
-    void testGetTransactionByStatusService_InvalidStatusThrowsException() {
-        InvalidTransactionStatusException exception = assertThrows(InvalidTransactionStatusException.class, () -> {
+        
+        // Test case 2: Invalid status throws InvalidTransactionStatusException
+        InvalidTransactionStatusException invalidStatusException = assertThrows(InvalidTransactionStatusException.class, () -> {
             transactionService.getTransactionByStatusService("unknown");
-        });
-        assertTrue(exception.getMessage().contains("Invalid transaction status."));
-    }
+        }, "Invalid status should throw InvalidTransactionStatusException.");
+        assertTrue(invalidStatusException.getMessage().contains("Invalid transaction status."));
 
-    
-    
-    /**
-     * Tests the exception handling when a null status is provided.
-     * Verifies that the service throws an {@link InvalidTransactionStatusException}.
-     */
-    @Test
-    @DisplayName("Get transactions by status service - null status throws exception")
-    void testGetTransactionByStatusService_NullStatusThrowsException() {
-        InvalidTransactionStatusException exception = assertThrows(InvalidTransactionStatusException.class, () -> {
+        // Test case 3: Null status throws InvalidTransactionStatusException
+        InvalidTransactionStatusException nullStatusException = assertThrows(InvalidTransactionStatusException.class, () -> {
             transactionService.getTransactionByStatusService(null);
-        });
-        assertTrue(exception.getMessage().contains("Invalid transaction status."));
+        }, "Null status should throw InvalidTransactionStatusException.");
+        assertTrue(nullStatusException.getMessage().contains("Invalid transaction status."));
     }
 
 
     
     // --- getTransactionByDateService Tests ---
     /**
-     * Tests the successful retrieval of transactions for a valid date.
-     * Verifies that the returned list is not null, not empty, and contains the correct number of transactions.
+     * Unit tests for the {@code TransactionServiceImpl.getTransactionByDateService} method.
+     * This suite verifies date-based retrieval, including valid and null date inputs.
      */
     @Test
-    @DisplayName("Get transactions by date service - valid date returns list")
-    void testGetTransactionByDateService_ValidDateReturnsList() throws InvalidDateFormatException, ParseException {
+    @DisplayName("Get by date service - handles valid and null dates with correct return values or exceptions")
+    void testGetTransactionByDateService() throws InvalidDateFormatException, ParseException {
+    	
+        // Test case 1: Valid date returns the correct list
         Date date = dateOnlySdf.parse("2024-07-20");
         List<Transaction> transactions = transactionService.getTransactionByDateService(date);
-        assertNotNull(transactions);
-        assertFalse(transactions.isEmpty());
+        assertNotNull(transactions, "Valid date should return a non-null list.");
+        assertFalse(transactions.isEmpty(), "List for valid date should not be empty.");
         assertEquals(2, transactions.size());
-    }
 
-    
-    
-    /**
-     * Tests the exception handling when a null date object is provided.
-     * Verifies that the service throws an {@link InvalidDateFormatException}.
-     */
-    @Test
-    @DisplayName("Get transactions by date service - null date throws exception")
-    void testGetTransactionByDateService_NullDateThrowsException() {
+        // Test case 2: Null date throws InvalidDateFormatException
         InvalidDateFormatException exception = assertThrows(InvalidDateFormatException.class, () -> {
             transactionService.getTransactionByDateService(null);
-        });
+        }, "Null date should throw InvalidDateFormatException.");
         assertEquals("Invalid date format", exception.getMessage());
     }
 
@@ -288,119 +214,68 @@ class ITransactionServiceTest {
     
     // --- getTransactionByDateRangeService Tests ---
     /**
-     * Tests the successful retrieval of transactions for a valid date range.
-     * Verifies that the returned list is not null and contains the expected number of transactions.
+     * Unit tests for the {@code TransactionServiceImpl.getTransactionByDateRangeService} method.
+     * This suite verifies date-range-based retrieval, including valid, invalid, and null inputs.
      */
     @Test
-    @DisplayName("Get transactions by date range service - valid range returns list")
-    void testGetTransactionByDateRangeService_ValidRangeReturnsList() throws InvalidRangeException, InvalidDateFormatException, ParseException {
+    @DisplayName("Get by date range service - handles valid, invalid, and null date ranges with correct return values or exceptions")
+    void testGetTransactionByDateRangeService() throws InvalidRangeException, InvalidDateFormatException, ParseException {
+    	
+        // Test case 1: Valid date range returns the correct list
         Date startDate = dateOnlySdf.parse("2024-07-20");
         Date endDate = dateOnlySdf.parse("2024-07-21");
         List<Transaction> transactions = transactionService.getTransactionByDateRangeService(startDate, endDate);
-        assertNotNull(transactions);
+        assertNotNull(transactions, "Valid date range should return a non-null list.");
         assertEquals(4, transactions.size());
-    }
 
-    
-    
-    /**
-     * Tests the exception handling when an invalid date range is provided (start date after end date).
-     * Verifies that the service throws an {@link InvalidRangeException}.
-     */
-    @Test
-    @DisplayName("Get transactions by date range service - start date after end date throws exception")
-    void testGetTransactionByDateRangeService_InvalidRangeThrowsException() throws ParseException {
-        Date startDate = dateOnlySdf.parse("2024-07-22");
-        Date endDate = dateOnlySdf.parse("2024-07-21");
-        InvalidRangeException exception = assertThrows(InvalidRangeException.class, () -> {
-            transactionService.getTransactionByDateRangeService(startDate, endDate);
-        });
-        assertEquals("Start should be smaller or equal to end.", exception.getMessage());
-    }
+        // Test case 2: Invalid date range (start date after end date) throws InvalidRangeException
+        Date invalidStartDate = dateOnlySdf.parse("2024-07-22");
+        Date invalidEndDate = dateOnlySdf.parse("2024-07-21");
+        InvalidRangeException invalidRangeException = assertThrows(InvalidRangeException.class, () -> {
+            transactionService.getTransactionByDateRangeService(invalidStartDate, invalidEndDate);
+        }, "Invalid date range should throw InvalidRangeException.");
+        assertEquals("Start should be smaller or equal to end.", invalidRangeException.getMessage());
 
-    
-    
-    /**
-     * Tests the behavior when a null start date is provided.
-     * This test exposes a bug where a NullPointerException would be thrown.
-     */
-    @Test
-    @DisplayName("Get transactions by date range service - null start date throws NullPointerException (exposing bug)")
-    void testGetTransactionByDateRangeService_NullStartDateThrowsException() throws ParseException {
-        Date endDate = dateOnlySdf.parse("2024-07-21");
+        // Test case 3: Null start date throws NullPointerException (exposing bug)
+        Date nullStartDate = null;
         assertThrows(NullPointerException.class, () -> {
-            transactionService.getTransactionByDateRangeService(null, endDate);
+            transactionService.getTransactionByDateRangeService(nullStartDate, endDate);
         }, "Service should throw an exception if start date is null, as it's not handled.");
-    }
 
-    
-    
-    /**
-     * Tests the behavior when a null end date is provided.
-     * This test exposes a bug where a NullPointerException would be thrown.
-     */
-    @Test
-    @DisplayName("Get transactions by date range service - null end date throws NullPointerException (exposing bug)")
-    void testGetTransactionByDateRangeService_NullEndDateThrowsException() throws ParseException {
-        Date startDate = dateOnlySdf.parse("2024-07-21");
+        // Test case 4: Null end date throws NullPointerException (exposing bug)
         assertThrows(NullPointerException.class, () -> {
             transactionService.getTransactionByDateRangeService(startDate, null);
         }, "Service should throw an exception if end date is null, as it's not handled.");
     }
 
-
     
+
     // --- getTransactionByAmountRangeService Tests ---
     /**
-     * Tests the successful retrieval of transactions for a valid amount range.
-     * Verifies that the returned list is not null and contains the expected number of transactions.
+     * Unit tests for the {@code TransactionServiceImpl.getTransactionByAmountRangeService} method.
+     * This suite verifies amount-range-based retrieval, including valid, invalid, and null inputs.
      */
     @Test
-    @DisplayName("Get transactions by amount range service - valid range returns list")
-    void testGetTransactionByAmountRangeService_ValidRangeReturnsList() throws InvalidRangeException {
+    @DisplayName("Get by amount range service - handles valid, invalid, and null amounts with correct return values or exceptions")
+    void testGetTransactionByAmountRangeService() throws InvalidRangeException {
+    	
+        // Test case 1: Valid amount range returns the correct list
         List<Transaction> transactions = transactionService.getTransactionByAmountRangeService(50.00, 150.00);
-        assertNotNull(transactions);
+        assertNotNull(transactions, "Valid amount range should return a non-null list.");
         assertEquals(2, transactions.size());
-    }
 
-    
-    
-    /**
-     * Tests the exception handling when an invalid amount range is provided (start amount greater than end amount).
-     * Verifies that the service throws an {@link InvalidRangeException}.
-     */
-    @Test
-    @DisplayName("Get transactions by amount range service - start amount greater than end amount throws exception")
-    void testGetTransactionByAmountRangeService_InvalidRangeThrowsException() {
-        InvalidRangeException exception = assertThrows(InvalidRangeException.class, () -> {
+        // Test case 2: Invalid amount range (start amount greater than end amount) throws InvalidRangeException
+        InvalidRangeException invalidAmountException = assertThrows(InvalidRangeException.class, () -> {
             transactionService.getTransactionByAmountRangeService(200.00, 100.00);
-        });
-        assertEquals("Start should be smaller or equal to end.", exception.getMessage());
-    }
+        }, "Invalid amount range should throw InvalidRangeException.");
+        assertEquals("Start should be smaller or equal to end.", invalidAmountException.getMessage());
 
-    
-    
-    /**
-     * Tests the behavior when a null start amount is provided.
-     * This test exposes a bug where a NullPointerException would be thrown.
-     */
-    @Test
-    @DisplayName("Get transactions by amount range service - null start amount throws NullPointerException (exposing bug)")
-    void testGetTransactionByAmountRangeService_NullStartAmountThrowsException() {
+        // Test case 3: Null start amount throws NullPointerException (exposing bug)
         assertThrows(NullPointerException.class, () -> {
             transactionService.getTransactionByAmountRangeService(null, 100.00);
         }, "Service should throw an exception if start amount is null, as it's not handled.");
-    }
-
-    
-    
-    /**
-     * Tests the behavior when a null end amount is provided.
-     * This test exposes a bug where a NullPointerException would be thrown.
-     */
-    @Test
-    @DisplayName("Get transactions by amount range service - null end amount throws NullPointerException (exposing bug)")
-    void testGetTransactionByAmountRangeService_NullEndAmountThrowsException() {
+        
+        // Test case 4: Null end amount throws NullPointerException (exposing bug)
         assertThrows(NullPointerException.class, () -> {
             transactionService.getTransactionByAmountRangeService(100.00, null);
         }, "Service should throw an exception if end amount is null, as it's not handled.");
@@ -410,118 +285,79 @@ class ITransactionServiceTest {
     
     // --- createTransactionService Tests ---
     /**
-     * Tests the successful creation of a new, valid transaction.
-     * Verifies that the service returns a non-null transaction object.
+     * Unit tests for the {@code TransactionServiceImpl.createTransactionService} method.
+     * This suite verifies the creation of new transactions, including valid and null inputs.
      */
     @Test
-    @DisplayName("Create transaction - new valid transaction returns transaction")
-    void testCreateTransactionService_ValidTransactionReturnsTransaction() throws InvalidTransactionObjectException, ParseException {
+    @DisplayName("Create transaction service - handles new valid transactions and null input with correct return values or exceptions")
+    void testCreateTransactionService() throws InvalidTransactionObjectException, ParseException {
+    	
+        // Test case 1: New valid transaction is created successfully
         Transaction newTransaction = new Transaction("TRX007", "netbanking", 500.00, "completed", dateTimeSdf.parse("2024-07-23 10:00:00"));
         Transaction created = transactionService.createTransactionService(newTransaction);
-        assertNotNull(created);
+        assertNotNull(created, "Creating a valid transaction should return a non-null object.");
         assertEquals(newTransaction, created);
-    }
-
-    
-    
-    /**
-     * Tests the exception handling when a null transaction object is provided for creation.
-     * Verifies that the service throws an {@link InvalidTransactionObjectException}.
-     */
-    @Test
-    @DisplayName("Create transaction - null transaction throws exception")
-    void testCreateTransactionService_NullTransactionThrowsException() {
-        InvalidTransactionObjectException exception = assertThrows(InvalidTransactionObjectException.class, () -> {
+        
+        // Test case 2: Null transaction object throws InvalidTransactionObjectException
+        InvalidTransactionObjectException nullTransactionException = assertThrows(InvalidTransactionObjectException.class, () -> {
             transactionService.createTransactionService(null);
-        });
-        assertEquals("Invalid Transaction object. Ensure fields are correct", exception.getMessage());
+        }, "Null transaction should throw InvalidTransactionObjectException.");
+        assertEquals("Invalid Transaction object. Ensure fields are correct", nullTransactionException.getMessage());
     }
 
 
     
     // --- deleteTransactionService Tests ---
     /**
-     * Tests the successful deletion of a transaction by an existing ID.
-     * Verifies that the service returns true.
+     * Unit tests for the {@code TransactionServiceImpl.deleteTransactionService} method.
+     * This suite verifies the deletion of transactions by ID, including existing, non-existing, and null inputs.
      */
     @Test
-    @DisplayName("Delete transaction - existing ID returns true")
-    void testDeleteTransactionService_ExistingIDReturnsTrue() throws InvalidTransactionIDException {
-        assertTrue(transactionService.deleteTransactionService("TRX001"));
-    }
+    @DisplayName("Delete transaction service - handles existing, non-existing, and null IDs with correct return values or exceptions")
+    void testDeleteTransactionService() throws InvalidTransactionIDException {
+    	
+        // Test case 1: Existing ID returns true
+        assertTrue(transactionService.deleteTransactionService("TRX001"), "Deleting an existing ID should return true.");
 
-    
-    
-    /**
-     * Tests the behavior when a non-existing ID is provided for deletion.
-     * Verifies that the service returns false.
-     */
-    @Test
-    @DisplayName("Delete transaction - non-existing ID returns false")
-    void testDeleteTransactionService_NonExistingIDReturnsFalse() throws InvalidTransactionIDException {
-        assertFalse(transactionService.deleteTransactionService("TRX999"));
-    }
+        // Test case 2: Non-existing ID returns false
+        assertFalse(transactionService.deleteTransactionService("TRX999"), "Deleting a non-existing ID should return false.");
 
-    
-    
-    /**
-     * Tests the exception handling when a null ID is provided for deletion.
-     * Verifies that the service throws an {@link InvalidTransactionIDException}.
-     */
-    @Test
-    @DisplayName("Delete transaction - null ID throws exception")
-    void testDeleteTransactionService_NullIDThrowsException() {
-        InvalidTransactionIDException exception = assertThrows(InvalidTransactionIDException.class, () -> {
+        // Test case 3: Null ID throws InvalidTransactionIDException
+        InvalidTransactionIDException nullIdException = assertThrows(InvalidTransactionIDException.class, () -> {
             transactionService.deleteTransactionService(null);
-        });
-        assertEquals("ID doesn't match transaction ID sematics", exception.getMessage());
+        }, "Null ID should throw InvalidTransactionIDException.");
+        assertEquals("ID doesn't match transaction ID sematics", nullIdException.getMessage());
     }
 
 
     
     // --- updateTransactionService Tests ---
     /**
-     * Tests the successful update of a transaction using an existing ID.
-     * Verifies that the service returns the updated transaction with the new details.
+     * Unit tests for the {@code TransactionServiceImpl.updateTransactionService} method.
+     * This suite verifies the update of transactions by ID, including valid, non-existent, and null inputs.
      */
     @Test
-    @DisplayName("Update transaction - existing ID returns updated transaction")
-    void testUpdateTransactionService_ExistingIDReturnsUpdatedTransaction() throws InvalidTransactionObjectException, ParseException {
+    @DisplayName("Update transaction service - handles existing, non-existing, and null transactions with correct return values or exceptions")
+    void testUpdateTransactionService() throws InvalidTransactionObjectException, ParseException {
+    	
+        // Test case 1: Existing ID successfully updates and returns the updated transaction
         Transaction transactionToUpdate = new Transaction("TRX001", "netbanking", 123.45, "pending", dateTimeSdf.parse("2024-07-25 12:00:00"));
         Transaction updated = transactionService.updateTransactionService(transactionToUpdate);
-        assertNotNull(updated);
+        assertNotNull(updated, "Updating an existing transaction should return a non-null object.");
         assertEquals("netbanking", updated.getType());
         assertEquals(123.45, updated.getAmount());
-    }
-
-    
-    
-    /**
-     * Tests the exception handling when a null transaction object is provided for update.
-     * Verifies that the service throws an {@link InvalidTransactionObjectException}.
-     */
-    @Test
-    @DisplayName("Update transaction - null transaction throws exception")
-    void testUpdateTransactionService_NullTransactionThrowsException() {
-        InvalidTransactionObjectException exception = assertThrows(InvalidTransactionObjectException.class, () -> {
+        
+        // Test case 2: Null transaction object throws InvalidTransactionObjectException
+        InvalidTransactionObjectException nullTransactionException = assertThrows(InvalidTransactionObjectException.class, () -> {
             transactionService.updateTransactionService(null);
-        });
-        assertEquals("Invalid Transaction object. Cannot update a null transaction.", exception.getMessage());
-    }
-
-    
-    
-    /**
-     * Tests the exception handling when an update is attempted with a non-existing transaction ID.
-     * Verifies that the service throws an {@link InvalidTransactionObjectException}.
-     */
-    @Test
-    @DisplayName("Update transaction - non-existing ID throws exception")
-    void testUpdateTransactionService_NonExistingIDThrowsException() throws ParseException {
-        Transaction transactionToUpdate = new Transaction("TRX999", "netbanking", 123.45, "pending", dateTimeSdf.parse("2024-07-25 12:00:00"));
-        InvalidTransactionObjectException exception = assertThrows(InvalidTransactionObjectException.class, () -> {
-            transactionService.updateTransactionService(transactionToUpdate);
-        });
-        assertEquals("Transaction with ID 'TRX999' not found for update, or update failed.", exception.getMessage());
+        }, "Null transaction should throw InvalidTransactionObjectException.");
+        assertEquals("Invalid Transaction object. Cannot update a null transaction.", nullTransactionException.getMessage());
+        
+        // Test case 3: Non-existing ID throws InvalidTransactionObjectException
+        Transaction nonExistingTransaction = new Transaction("TRX999", "netbanking", 123.45, "pending", dateTimeSdf.parse("2024-07-25 12:00:00"));
+        InvalidTransactionObjectException nonExistingException = assertThrows(InvalidTransactionObjectException.class, () -> {
+            transactionService.updateTransactionService(nonExistingTransaction);
+        }, "Update with a non-existing ID should throw InvalidTransactionObjectException.");
+        assertEquals("Transaction with ID 'TRX999' not found for update, or update failed.", nonExistingException.getMessage());
     }
 }

@@ -77,7 +77,6 @@ public class TransactionServiceImpl implements ITransactionService {
 		}
 		return transactionsByType;
 	}
-
 	
 	
 	/**
