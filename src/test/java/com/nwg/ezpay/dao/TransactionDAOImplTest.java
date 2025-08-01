@@ -85,6 +85,7 @@ class TransactionDAOImplTest {
      */
     @AfterEach
     void tearDown() throws IOException {
+    	
         // Clear the static list to release resources.
         TransactionDAOImpl.transactionsList.clear();
         // Clear the CSV file as well to ensure a clean slate.
@@ -103,21 +104,21 @@ class TransactionDAOImplTest {
     @DisplayName("Get transaction by ID - returns correct transaction for existing, null, non-existing, and empty IDs")
     void testGetTransactionById() {
 
-        //Existing ID returns a transaction
+        //Test Case 1: Existing ID returns a transaction
         Transaction existingTransaction = transactionDAO.getTransactionById("TRX001");
         assertNotNull(existingTransaction);
         assertEquals("TRX001", existingTransaction.getTransactionId());
         assertEquals("upi", existingTransaction.getType());
 
-        //Non-existing ID returns null
+        //Test Case 2: Non-existing ID returns null
         Transaction nonExistingTransaction = transactionDAO.getTransactionById("NONEXISTENT");
         assertNull(nonExistingTransaction);
 
-        //Null ID returns null
+        //Test Case 3: Null ID returns null
         Transaction nullIdTransaction = transactionDAO.getTransactionById(null);
         assertNull(nullIdTransaction);
         
-        //Empty string ID returns null
+        //Test Case 4: Empty string ID returns null
         Transaction emptyIdTransaction = transactionDAO.getTransactionById("");
         assertNull(emptyIdTransaction);
     }
@@ -134,24 +135,24 @@ class TransactionDAOImplTest {
     @DisplayName("Get transactions by type - handles existing, non-existing, null, and incorrect case types")
     void testGetTransactionByType() {
     	
-        //Existing type returns the correct list
+        //Test Case 1: Existing type returns the correct list
         List<Transaction> upiTransactions = transactionDAO.getTransactionByType("upi");
         assertNotNull(upiTransactions);
         assertFalse(upiTransactions.isEmpty());
         assertEquals(3, upiTransactions.size());
         assertTrue(upiTransactions.stream().allMatch(t -> "upi".equals(t.getType())));
 
-        //Non-existing type returns an empty list
+        //Test Case 2: Non-existing type returns an empty list
         List<Transaction> cryptoTransactions = transactionDAO.getTransactionByType("crypto");
         assertNotNull(cryptoTransactions);
         assertTrue(cryptoTransactions.isEmpty());
 
-        //Null type returns an empty list
+        //Test Case 3: Null type returns an empty list
         List<Transaction> nullTypeTransactions = transactionDAO.getTransactionByType(null);
         assertNotNull(nullTypeTransactions);
         assertTrue(nullTypeTransactions.isEmpty());
 
-        //Case-sensitive match returns an empty list for wrong case
+        //Test Case 4: Case-sensitive match returns an empty list for wrong case
         List<Transaction> wrongCaseTransactions = transactionDAO.getTransactionByType("Upi");
         assertNotNull(wrongCaseTransactions);
         assertTrue(wrongCaseTransactions.isEmpty());
@@ -169,19 +170,19 @@ class TransactionDAOImplTest {
     @DisplayName("Get transactions by status - handles existing, non-existing, and null status")
     void testGetTransactionByStatus() {
     	
-        //Existing status returns the correct list
+        //Test Case 1: Existing status returns the correct list
         List<Transaction> completedTransactions = transactionDAO.getTransactionByStatus("completed");
         assertNotNull(completedTransactions);
         assertFalse(completedTransactions.isEmpty());
         assertEquals(3, completedTransactions.size());
         assertTrue(completedTransactions.stream().allMatch(t -> "completed".equals(t.getStatus())));
 
-        //Non-existing status returns an empty list
+        //Test Case 2: Non-existing status returns an empty list
         List<Transaction> unknownStatusTransactions = transactionDAO.getTransactionByStatus("unknown");
         assertNotNull(unknownStatusTransactions);
         assertTrue(unknownStatusTransactions.isEmpty());
 
-        //Null status returns an empty list
+        //Test Case 3: Null status returns an empty list
         List<Transaction> nullStatusTransactions = transactionDAO.getTransactionByStatus(null);
         assertNotNull(nullStatusTransactions);
         assertTrue(nullStatusTransactions.isEmpty());
@@ -199,7 +200,7 @@ class TransactionDAOImplTest {
     @DisplayName("Get transactions by date - handles existing, non-existing, null, and dates with time components")
     void testGetTransactionByDate() throws ParseException {
     	
-        //Existing date returns the correct list
+        //Test Case 1: Existing date returns the correct list
         Date date = dateOnlySdf.parse("2024-07-20");
         List<Transaction> transactionsOnDate = transactionDAO.getTransactionByDate(date);
         assertNotNull(transactionsOnDate);
@@ -210,13 +211,13 @@ class TransactionDAOImplTest {
             catch (ParseException e) { fail("Date parsing error in assertion"); return false; }
         }));
 
-        //Non-existing date returns an empty list
+        //Test Case 2: Non-existing date returns an empty list
         Date nonExistingDate = dateOnlySdf.parse("2025-01-01");
         List<Transaction> transactionsOnNonExistingDate = transactionDAO.getTransactionByDate(nonExistingDate);
         assertNotNull(transactionsOnNonExistingDate);
         assertTrue(transactionsOnNonExistingDate.isEmpty());
 
-        //Null date returns an empty list
+        //Test Case 3: Null date returns an empty list
         List<Transaction> transactionsOnNullDate = transactionDAO.getTransactionByDate(null);
         assertNotNull(transactionsOnNullDate);
         assertTrue(transactionsOnNullDate.isEmpty());
@@ -235,7 +236,7 @@ class TransactionDAOImplTest {
     @DisplayName("Get transactions by date range - handles valid, empty, single, null, and invalid ranges")
     void testGetTransactionByDateRange() throws ParseException {
     	
-        //Valid range returns the correct list
+        //Test Case 1: Valid range returns the correct list
         Date startDate = dateOnlySdf.parse("2024-07-20");
         Date endDate = dateOnlySdf.parse("2024-07-21");
         List<Transaction> transactionsInRange = transactionDAO.getTransactionByDateRange(startDate, endDate);
@@ -243,30 +244,30 @@ class TransactionDAOImplTest {
         assertFalse(transactionsInRange.isEmpty());
         assertEquals(4, transactionsInRange.size());
 
-        //Single date range returns the correct list
+        //Test Case 2: Single date range returns the correct list
         Date singleDate = dateOnlySdf.parse("2024-07-22");
         List<Transaction> transactionsOnSingleDate = transactionDAO.getTransactionByDateRange(singleDate, singleDate);
         assertNotNull(transactionsOnSingleDate);
         assertFalse(transactionsOnSingleDate.isEmpty());
         assertEquals(2, transactionsOnSingleDate.size());
 
-        //Range with no transactions returns null
+        //Test Case 3: Range with no transactions returns null
         Date futureStartDate = dateOnlySdf.parse("2025-01-01");
         Date futureEndDate = dateOnlySdf.parse("2025-01-31");
         List<Transaction> futureTransactions = transactionDAO.getTransactionByDateRange(futureStartDate, futureEndDate);
         assertNull(futureTransactions);
 
-        //Null start date returns null
+        //Test Case 4: Null start date returns null
         Date nullStartDate = null;
         List<Transaction> nullStartRange = transactionDAO.getTransactionByDateRange(nullStartDate, endDate);
         assertNull(nullStartRange);
 
-        //Null end date returns null
+        //Test Case 5: Null end date returns null
         Date nullEndDate = null;
         List<Transaction> nullEndRange = transactionDAO.getTransactionByDateRange(startDate, nullEndDate);
         assertNull(nullEndRange);
         
-        //Start date after end date returns null
+        //Test Case 6: Start date after end date returns null
         Date invalidStartDate = dateOnlySdf.parse("2024-07-22");
         Date invalidEndDate = dateOnlySdf.parse("2024-07-21");
         List<Transaction> invalidRange = transactionDAO.getTransactionByDateRange(invalidStartDate, invalidEndDate);
@@ -286,30 +287,30 @@ class TransactionDAOImplTest {
     @DisplayName("Get transactions by amount range - handles valid, empty, and invalid ranges")
     void testGetTransactionByAmountRange() {
     	
-        //Valid range returns the correct list
+        //Test Case 1: Valid range returns the correct list
         List<Transaction> transactionsInRange = transactionDAO.getTransactionByAmountRange(50.00, 150.00);
         assertNotNull(transactionsInRange);
         assertFalse(transactionsInRange.isEmpty());
         assertEquals(2, transactionsInRange.size()); // TRX001 (100.00), TRX003 (50.00)
         assertTrue(transactionsInRange.stream().allMatch(t -> t.getAmount() >= 50.00 && t.getAmount() <= 150.00));
 
-        //Range with no transactions returns an empty list
+        //Test Case 2: Range with no transactions returns an empty list
         List<Transaction> emptyRange = transactionDAO.getTransactionByAmountRange(1000.00, 2000.00);
         assertNotNull(emptyRange);
         assertTrue(emptyRange.isEmpty());
 
-        //Start amount greater than end amount returns an empty list
+        //Test Case 3: Start amount greater than end amount returns an empty list
         List<Transaction> invalidRange = transactionDAO.getTransactionByAmountRange(200.00, 100.00);
         assertNotNull(invalidRange);
         assertTrue(invalidRange.isEmpty());
         
-        //Null start amount returns an empty list
+        //Test Case 5: Null start amount returns an empty list
         List<Transaction> nullStartAmount = transactionDAO.getTransactionByAmountRange(null, 100.00);
         // Assertion: The DAO should return an empty list, not null, for an invalid range.
         assertNotNull(nullStartAmount);
         assertTrue(nullStartAmount.isEmpty());
         
-        // Null end amount returns transactions up to max amount
+        //Test Case 6: Null end amount returns transactions up to max amount
         List<Transaction> nullEndAmount = transactionDAO.getTransactionByAmountRange(100.00, null);
         assertNotNull(nullEndAmount);
         assertFalse(nullEndAmount.isEmpty());
@@ -330,7 +331,7 @@ class TransactionDAOImplTest {
     @DisplayName("Create transaction - handles new valid transaction and null input")
     void testCreateTransaction() throws ParseException {
     	
-        //New valid transaction is added successfully
+        //Test Case 1: New valid transaction is added successfully
         int initialSize = TransactionDAOImpl.transactionsList.size();
         Transaction newTransaction = new Transaction("TRX007", "netbanking", 500.00, "completed", dateTimeSdf.parse("2024-07-23 10:00:00"));
         Transaction created = transactionDAO.createTransaction(newTransaction);
@@ -340,7 +341,7 @@ class TransactionDAOImplTest {
         assertEquals(newTransaction, created);
         assertTrue(TransactionDAOImpl.transactionsList.contains(newTransaction));
 
-        //Null transaction returns null
+        //Test Case 2: Null transaction returns null
         int currentSize = TransactionDAOImpl.transactionsList.size();
         Transaction nullCreated = transactionDAO.createTransaction(null);
         assertNull(nullCreated);
@@ -364,8 +365,7 @@ class TransactionDAOImplTest {
         transactionDAO.createTransaction(duplicateTransaction);
 
         
-        // This assertion passes, but it highlights the DAO's loophole:
-        // A new transaction with an existing ID has been added to the list.
+        //Test Case 1: A new transaction with an existing ID has been added to the list.
         assertEquals(initialSize + 1, TransactionDAOImpl.transactionsList.size());
         
         long count = TransactionDAOImpl.transactionsList.stream()
@@ -386,7 +386,7 @@ class TransactionDAOImplTest {
     @DisplayName("Delete transaction - handles existing, non-existing, and null ID")
     void testDeleteTransaction() {
     	
-        //Existing ID returns true and removes the transaction
+        //Test Case 1: Existing ID returns true and removes the transaction
         int initialSize = TransactionDAOImpl.transactionsList.size();
         boolean deleted = transactionDAO.deleteTransaction("TRX001");
 
@@ -394,14 +394,14 @@ class TransactionDAOImplTest {
         assertEquals(initialSize - 1, TransactionDAOImpl.transactionsList.size());
         assertNull(transactionDAO.getTransactionById("TRX001"));
 
-        //Non-existing ID returns false and list size is unchanged
+        //Test Case 2: Non-existing ID returns false and list size is unchanged
         int currentSize = TransactionDAOImpl.transactionsList.size();
         boolean nonExistingDeleted = transactionDAO.deleteTransaction("NONEXISTENT");
 
         assertFalse(nonExistingDeleted);
         assertEquals(currentSize, TransactionDAOImpl.transactionsList.size());
 
-        //Null ID returns false and list size is unchanged
+        //Test Case 3: Null ID returns false and list size is unchanged
         boolean nullIdDeleted = transactionDAO.deleteTransaction(null);
         assertFalse(nullIdDeleted);
         assertEquals(currentSize, TransactionDAOImpl.transactionsList.size());
@@ -420,7 +420,7 @@ class TransactionDAOImplTest {
     @DisplayName("Update transaction - handles existing ID, non-existing ID, null transaction, and null ID in object")
     void testUpdateTransaction() throws ParseException {
     	
-        //Existing ID updates and returns the updated transaction
+        //Test Case 1: Existing ID updates and returns the updated transaction
         Transaction updatedTransaction = new Transaction(
                 "TRX002", "bank_new", 260.00, "completed", dateTimeSdf.parse("2024-07-20 12:00:00"));
 
@@ -433,7 +433,7 @@ class TransactionDAOImplTest {
         assertNotNull(fetchedTransaction);
         assertEquals("bank_new", fetchedTransaction.getType());
 
-        //Non-existing ID returns null and the list size is unchanged
+        //Test Case 2: Non-existing ID returns null and the list size is unchanged
         int initialSize = TransactionDAOImpl.transactionsList.size();
         Transaction nonExistingTransaction = new Transaction(
                 "NONEXISTENT", "test", 0.0, "test", dateTimeSdf.parse("2024-01-01 00:00:00"));
@@ -442,12 +442,12 @@ class TransactionDAOImplTest {
         assertNull(nonExistingReturned);
         assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
 
-        //Null transaction input returns null and the list size is unchanged
+        //Test Case 3: Null transaction input returns null and the list size is unchanged
         Transaction nullReturned = transactionDAO.updateTransaction(null);
         assertNull(nullReturned);
         assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
 
-        //Update with a valid transaction object but a null ID returns null
+        //Test Case 4: Update with a valid transaction object but a null ID returns null
         Transaction transactionWithNullId = new Transaction(
                 null, "test_type", 123.45, "test_status", dateTimeSdf.parse("2024-01-01 00:00:00"));
 
