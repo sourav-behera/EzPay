@@ -64,13 +64,15 @@ class ITransactionServiceTest {
      *
      * @throws IOException if there is an error writing to the CSV file.
      */
+ // In your ITransactionServiceTest file
     @BeforeEach
     void setup() throws IOException {
-        try (FileWriter writer = new FileWriter(CSV_FILE_PATH)) {
-            writer.write(INITIAL_DATA);
-        }
-        transactionService = new TransactionServiceImpl(); // Initialize service for each test
+    	try (FileWriter writer = new FileWriter(CSV_FILE_PATH)) {
+    		writer.write(INITIAL_DATA);
+    		}
+    	transactionService = new TransactionServiceImpl(); // Initialize service for each test
     }
+    
 
 
     /**

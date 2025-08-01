@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import com.nwg.ezpay.model.Transaction;
@@ -175,6 +176,8 @@ public class TransactionDAOImpl implements ITransactionDAO {
 		return null;
 	}
 
+	
+	
 	/**
 	 * This methods returns the {@code List<Transaction>} with amount within the specified range
 	 * 
@@ -185,23 +188,51 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	 */
 	@Override
 	public List<Transaction> getTransactionByAmountRange(Double startAmount, Double endAmount) {
-		List<Transaction> transactionsByAmountRange = new ArrayList<Transaction>();
-		for (Transaction transaction : transactionsList) {
-			Double transactionAmount = transaction.getAmount();
-			if (startAmount <= transactionAmount && transactionAmount <= endAmount) {
-				transactionsByAmountRange.add(transaction);
-			}
-		}
-		return transactionsByAmountRange;
+	    // If the start amount is null, no valid range can be determined.
+	    if (startAmount == null) {
+	        return Collections.emptyList();
+	    }
+	    
+	    // If the end amount is null, assume the range extends to the maximum possible value.
+	    if (endAmount == null) {
+	        endAmount = Double.MAX_VALUE;
+	    }
+	    
+	    List<Transaction> transactionsByAmountRange = new ArrayList<>();
+	    for (Transaction transaction : transactionsList) {
+	        Double transactionAmount = transaction.getAmount();
+	        if (startAmount <= transactionAmount && transactionAmount <= endAmount) {
+	            transactionsByAmountRange.add(transaction);
+	        }
+	    }
+	    return transactionsByAmountRange;
 	}
 
+	
 	/**
 	 * @param transaction : {@code Transaction} object to insert into the transaction table.
-	 * @return {@code Transaction} : The transaction object that was created otherwise null;
+	 * @return {@code Transaction} : The transaction object that was created. Duplicate Transaction ID will throw error otherwise null.;
 	 */
 	@Override
 	public Transaction createTransaction(Transaction transaction) {
+	    // 1. Check for null input first.
+	    if (transaction == null) {
+	        return null;
+	    }
+	    
+	    // 2. Check if a transaction with the same ID already exists.
+	    boolean idExists = transactionsList.stream()
+	            .anyMatch(t -> t.getTransactionId().equals(transaction.getTransactionId()));
+
+	    // 3. If the ID already exists, throw an exception.
+	    if (idExists) {
+	        throw new IllegalArgumentException("Transaction with ID " + transaction.getTransactionId() + " already exists.");
+	    }
+	    
+	    // 4. If the ID is unique, add the new transaction.
 	    transactionsList.add(transaction);
+	    
+	    // 5. Return the newly added transaction.
 	    return transactionsList.get(transactionsList.size() - 1);
 	}
 

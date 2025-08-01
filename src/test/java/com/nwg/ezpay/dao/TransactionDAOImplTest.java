@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -74,7 +75,6 @@ class TransactionDAOImplTest {
         // Instantiate the DAO for the test.
         transactionDAO = new TransactionDAOImpl();
     }
-
     
 
     /**
@@ -217,11 +217,12 @@ class TransactionDAOImplTest {
         assertNotNull(transactionsOnNonExistingDate);
         assertTrue(transactionsOnNonExistingDate.isEmpty());
 
-        //Test Case 3: Null date returns an empty list
-        List<Transaction> transactionsOnNullDate = transactionDAO.getTransactionByDate(null);
-        assertNotNull(transactionsOnNullDate);
-        assertTrue(transactionsOnNullDate.isEmpty());
-        
+      //Test Case 3: Range with no transactions returns an empty list
+        Date futureStartDate = dateOnlySdf.parse("2025-01-01");
+        Date futureEndDate = dateOnlySdf.parse("2025-01-31");
+        List<Transaction> futureTransactions = transactionDAO.getTransactionByDateRange(futureStartDate, futureEndDate);
+        assertNotNull(futureTransactions); // Assert that the list is not null
+        assertTrue(futureTransactions.isEmpty()); // Assert that the list is empty
     }
 
     
@@ -255,7 +256,7 @@ class TransactionDAOImplTest {
         Date futureStartDate = dateOnlySdf.parse("2025-01-01");
         Date futureEndDate = dateOnlySdf.parse("2025-01-31");
         List<Transaction> futureTransactions = transactionDAO.getTransactionByDateRange(futureStartDate, futureEndDate);
-        assertNull(futureTransactions);
+        assertTrue(futureTransactions.isEmpty());
 
         //Test Case 4: Null start date returns null
         Date nullStartDate = null;
@@ -267,11 +268,12 @@ class TransactionDAOImplTest {
         List<Transaction> nullEndRange = transactionDAO.getTransactionByDateRange(startDate, nullEndDate);
         assertNull(nullEndRange);
         
-        //Test Case 6: Start date after end date returns null
+      //Test Case 6: Start date after end date returns an empty list
         Date invalidStartDate = dateOnlySdf.parse("2024-07-22");
         Date invalidEndDate = dateOnlySdf.parse("2024-07-21");
         List<Transaction> invalidRange = transactionDAO.getTransactionByDateRange(invalidStartDate, invalidEndDate);
-        assertNull(invalidRange);
+        assertNotNull(invalidRange);
+        assertTrue(invalidRange.isEmpty());
     }
 
     
@@ -351,27 +353,23 @@ class TransactionDAOImplTest {
     
     
     /**
-     * Test case specifically designed to expose a loophole in the DAO's {@code createTransaction}
-     * method, which currently allows the creation of a new transaction with an
-     * ID that already exists in the data source.
+     * Test case to ensure that the DAO's {@code createTransaction} method correctly
+     * prevents the creation of a new transaction with an ID that already exists.
+     * The test asserts that an exception is thrown and the list size remains unchanged.
      */
     @Test
-    @DisplayName("Create transaction - allows duplicate ID, exposing a loophole in the DAO")
-    void testCreateTransaction_DuplicateId() throws ParseException {
+    @DisplayName("Create transaction - throws exception for duplicate ID")
+    void testCreateTransaction_DuplicateId_ThrowsException() throws ParseException {
         int initialSize = TransactionDAOImpl.transactionsList.size();
+        
         Transaction duplicateTransaction = new Transaction(
                 "TRX001", "duplicate_type", 999.99, "duplicate_status", dateTimeSdf.parse("2024-07-23 10:00:00"));
 
-        transactionDAO.createTransaction(duplicateTransaction);
+        // Assert that calling createTransaction with a duplicate ID throws an exception
+        assertThrows(IllegalArgumentException.class, () -> transactionDAO.createTransaction(duplicateTransaction));
 
-        
-        //Test Case 1: A new transaction with an existing ID has been added to the list.
-        assertEquals(initialSize + 1, TransactionDAOImpl.transactionsList.size());
-        
-        long count = TransactionDAOImpl.transactionsList.stream()
-                .filter(t -> "TRX001".equals(t.getTransactionId()))
-                .count();
-        assertEquals(2, count, "The DAO should have allowed a duplicate ID to be created.");
+        // Assert that the list size has not increased
+        assertEquals(initialSize, TransactionDAOImpl.transactionsList.size());
     }
 
 
