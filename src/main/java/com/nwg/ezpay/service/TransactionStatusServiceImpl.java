@@ -12,14 +12,35 @@ import com.nwg.ezpay.exception.InvalidTransactionStatusIdException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusObjectException;
 import com.nwg.ezpay.model.TransactionStatus;
 
+/**
+ * Service implementation for managing transaction statuses.
+ * Provides methods for CRUD operations and various filters.
+ * 
+ * <p>This class implements the {@link ITransactionStatusService} interface,
+ * handling business logic for transaction status management.</p>
+ * 
+ * @author Palak Deb Patra
+ * @version 0.0.1
+ */
+
 public class TransactionStatusServiceImpl implements ITransactionStatusService {
 
     ITransactionStatusDAO iTransactionStatusDAO;
 
+    /**
+     * Default constructor. Initializes the DAO layer.
+     */
     public TransactionStatusServiceImpl() {
         iTransactionStatusDAO = new TransactionStatusDAOImpl();
     }
 
+    /**
+     * Retrieves a transaction by its unique ID.
+     *
+     * @param transactionID unique transaction identifier
+     * @return {@link Transaction} object if found
+     * @throws InvalidTransactionIDException if ID is null or invalid
+     */
     @Override
     public TransactionStatus getStatusByIdService(String transactionStatusId) throws InvalidTransactionStatusIdException {
         TransactionStatus status = null;
@@ -34,6 +55,13 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         return status;
     }
 
+    /**
+     * Fetches all transactions of a specified type.
+     *
+     * @param type transaction type (e.g., "upi", "bank")
+     * @return list of matching transactions
+     * @throws InvalidTransactionTypeException if type is null or not one of the allowed values
+     */
     @Override
     public List<TransactionStatus> getStatusesByTypeService(String statusType) throws InvalidTransactionStatusException {
         List<TransactionStatus> statusesByType = null;
@@ -44,7 +72,14 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         }
         return statusesByType;
     }
-
+   
+    /**
+     * Fetches all transactions that match a given status.
+     *
+     * @param status status value (e.g., "initiated", "pending", "completed", "failed")
+     * @return list of matching transactions
+     * @throws InvalidTransactionStatusException if status is null or invalid
+     */
     @Override
     public List<TransactionStatus> getStatusesByReasonService(String reason) throws InvalidTransactionStatusException {
         List<TransactionStatus> statusesByReason = null;
@@ -56,6 +91,13 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         return statusesByReason;
     }
 
+    /**
+     * Retrieves all transactions that occurred on a specific date.
+     *
+     * @param date the date to match
+     * @return list of transactions on that date
+     * @throws InvalidDateFormatException if the date is null
+     */
     @Override
     public List<TransactionStatus> getStatusesByDateService(Date date) throws InvalidDateFormatException {
         List<TransactionStatus> statusesByDate = null;
@@ -67,6 +109,15 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         return statusesByDate;
     }
 
+    /**
+     * Retrieves transactions that fall within the specified date range.
+     *
+     * @param startDate beginning of the range
+     * @param endDate end of the range
+     * @return list of matching transactions
+     * @throws InvalidDateFormatException if either date is null
+     * @throws InvalidRangeException if startDate is after endDate
+     */
     @Override
     public List<TransactionStatus> getStatusesByDateRangeService(Date startDate, Date endDate)
             throws InvalidDateFormatException, InvalidRangeException {
@@ -81,6 +132,13 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         return statusesByDateRange;
     }
 
+    /**
+     * Creates a new transaction status entry.
+     *
+     * @param transaction transaction object to be persisted
+     * @return the newly created transaction
+     * @throws InvalidTransactionObjectException if the object is null or invalid
+     */
     @Override
     public TransactionStatus createStatusService(TransactionStatus transactionStatus) throws InvalidTransactionStatusObjectException {
         TransactionStatus newStatus = null;
@@ -92,6 +150,13 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         return newStatus;
     }
 
+    /**
+     * Deletes a transaction status using its ID.
+     *
+     * @param transactionID ID of the transaction to delete
+     * @return true if deletion is successful
+     * @throws InvalidTransactionIDException if ID is null
+     */
     @Override
     public boolean deleteStatusService(String transactionStatusId) throws InvalidTransactionStatusIdException {
         boolean status = false;
@@ -106,7 +171,14 @@ public class TransactionStatusServiceImpl implements ITransactionStatusService {
         }
         return status;
     }
-
+    
+    /**
+     * Updates an existing transaction status.
+     *
+     * @param transaction updated transaction object
+     * @return updated transaction from the DB
+     * @throws InvalidTransactionObjectException if object is null or update fails
+     */
     @Override
     public TransactionStatus updateStatusService(TransactionStatus transactionStatus) throws InvalidTransactionStatusObjectException {
         TransactionStatus updatedStatus = null;
