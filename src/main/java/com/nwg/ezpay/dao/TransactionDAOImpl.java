@@ -126,24 +126,24 @@ public class TransactionDAOImpl implements ITransactionDAO {
 	 */
 	@Override
 	public List<Transaction> getTransactionByDate(Date date) {
-		if (date == null) {
+	    if (date == null) {
 	        return new ArrayList<>();
 	    }
-		List<Transaction> transactionsByDate = new ArrayList<Transaction>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			for (Transaction transaction : transactionsList) {
-				Date transactionDate = transaction.getDate();
-				transactionDate = sdf.parse(sdf.format(transactionDate));
-				if (transactionDate.equals(date)) {
-					transactionsByDate.add(transaction);
-				}
-			}
-			return transactionsByDate;
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
+	    List<Transaction> transactionsByDate = new ArrayList<>();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    try {
+	        for (Transaction transaction : transactionsList) {
+	            Date transactionDate = transaction.getDate();
+	            transactionDate = sdf.parse(sdf.format(transactionDate));
+	            if (transactionDate.equals(date)) {
+	                transactionsByDate.add(transaction);
+	            }
+	        }
+	        return transactionsByDate;
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
 	}
 
 	/**
