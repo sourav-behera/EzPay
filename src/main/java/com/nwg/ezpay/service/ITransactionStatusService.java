@@ -10,6 +10,17 @@ import com.nwg.ezpay.exception.InvalidTransactionStatusIdException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusObjectException;
 import com.nwg.ezpay.model.TransactionStatus;
 
+/**
+ * Service interface for managing transaction statuses.
+ * Provides methods for CRUD operations and various filters.
+ * 
+ * <p>This interface defines the contract for transaction status management,
+ * including retrieval by ID, type, reason, date, and creation of new statuses.</p>
+ * 
+ * @author Palak Deb Patra
+ * @version 0.0.1
+ */
+
 public interface ITransactionStatusService {
 	
     /**

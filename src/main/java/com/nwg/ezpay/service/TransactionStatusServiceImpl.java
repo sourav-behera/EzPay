@@ -12,6 +12,17 @@ import com.nwg.ezpay.exception.InvalidTransactionStatusIdException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusObjectException;
 import com.nwg.ezpay.model.TransactionStatus;
 
+/**
+ * Service implementation for managing transaction statuses.
+ * Provides methods for CRUD operations and various filters.
+ * 
+ * <p>This class implements the {@link ITransactionStatusService} interface,
+ * handling business logic for transaction status management.</p>
+ * 
+ * @author Palak Deb Patra
+ * @version 0.0.1
+ */
+
 public class TransactionStatusServiceImpl implements ITransactionStatusService {
 
     ITransactionStatusDAO iTransactionStatusDAO;

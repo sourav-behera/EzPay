@@ -19,8 +19,6 @@ import com.nwg.ezpay.model.TransactionStatus;
  * 
  * @author Palak Deb Patra
  * @version 0.0.1
- * @since 2025-07-28
- * @revised 2025-08-01
  */
 
 public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
@@ -151,11 +149,11 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
         List<TransactionStatus> list = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date sDate = simpleDateFormat.parse(simpleDateFormat.format(startDate));
-            Date eDate = simpleDateFormat.parse(simpleDateFormat.format(endDate));
+            Date startDateNormalized = simpleDateFormat.parse(simpleDateFormat.format(startDate));
+            Date endDateNormalized = simpleDateFormat.parse(simpleDateFormat.format(endDate));
             for (TransactionStatus transactionStatus : transactionStatuses) {
                 Date tsDate = simpleDateFormat.parse(simpleDateFormat.format(transactionStatus.getTimestamp()));
-                if (tsDate.compareTo(sDate) >= 0 && tsDate.compareTo(eDate) <= 0) {
+                if (tsDate.compareTo(startDateNormalized) >= 0 && tsDate.compareTo(endDateNormalized) <= 0) {
                     list.add(transactionStatus);
                 }
             }
@@ -174,10 +172,7 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
      */
     @Override
     public TransactionStatus createStatus(TransactionStatus transactionStatus) {
-        if (transactionStatuses.add(transactionStatus)) {
-            return transactionStatuses.get(transactionStatuses.size() - 1);
-        }
-        return null;
+    	return transactionStatuses.get(transactionStatuses.size() - 1);
     }
     
     /**
@@ -190,8 +185,8 @@ public class TransactionStatusDAOImpl implements ITransactionStatusDAO {
     @Override
     public TransactionStatus updateStatus(TransactionStatus transactionStatus) {
         for (int i = 0; i < transactionStatuses.size(); i++) {
-            TransactionStatus tranStatus = transactionStatuses.get(i);
-            if (tranStatus.getTransactionStatusId().equals(transactionStatus.getTransactionStatusId())) {
+            TransactionStatus existingTransactionStatus = transactionStatuses.get(i);
+            if (existingTransactionStatus.getTransactionStatusId().equals(transactionStatus.getTransactionStatusId())) {
                 transactionStatuses.set(i, transactionStatus);
                 return transactionStatuses.get(i);
             }
