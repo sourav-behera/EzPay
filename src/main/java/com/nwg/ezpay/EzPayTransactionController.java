@@ -11,6 +11,7 @@ import com.nwg.ezpay.exception.InvalidRangeException;
 import com.nwg.ezpay.exception.InvalidTransactionIDException;
 import com.nwg.ezpay.exception.InvalidTransactionObjectException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusException;
+import com.nwg.ezpay.exception.InvalidTransactionTypeException;
 import com.nwg.ezpay.model.Transaction;
 import com.nwg.ezpay.service.ITransactionService;
 import com.nwg.ezpay.service.TransactionServiceImpl;
@@ -50,6 +51,7 @@ public class EzPayTransactionController {
 		System.out.println("2. Get Transactions by date range");
 		System.out.println("3. Get Transactions by amount range");
 		System.out.println("4. Get Transactions by status");
+		System.out.println("5. Get Transactions by type");
 		int choice = Integer.parseInt(scanner.nextLine());
 		switch(choice) {
 		case 1:
@@ -108,7 +110,21 @@ public class EzPayTransactionController {
 				e.printStackTrace();
 			}
 			break;
-		}	
+		case 5:
+			try {
+				System.out.println("Enter the type to show");
+				String type = scanner.nextLine();
+				List<Transaction> transactionsByType = itransactionService.getTransactionByTypeService(type);
+				for (Transaction transaction : transactionsByType) {
+					System.out.println(transaction);
+				}
+			} catch (InvalidTransactionTypeException e) {
+				e.printStackTrace();
+			}
+			break;
+		default :
+			System.out.println("Invalid choice");
+		}
 	}
 	
 	public static void choiceThreeHandler() {

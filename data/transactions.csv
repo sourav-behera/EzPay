@@ -1,0 +1,5 @@
+TRX001,upi,100.00,completed,2024-07-20 10:00:00
+TRX002,bank,250.50,pending,2024-07-20 11:30:00
+TRX003,upi,50.00,initiated,2024-07-21 09:00:00
+TRX004,bank,150.75,completed,2024-07-21 14:45:00
+TRX005,upi,300.00,completed,2024-07-22 16:00:00
