@@ -488,21 +488,21 @@ class TransactionDAOImplTest {
      */
     private void reloadTransactionsListFromCsv() {
         TransactionDAOImpl.transactionsList.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] details = line.split(",");
-                String transactionId = details[0];
-                String type = details[1];
-                Double amount = Double.parseDouble(details[2]);
-                String status = details[3];
-                Date date = dateTimeSdf.parse(details[4]);
+        try (BufferedReader csvReader = new BufferedReader(new FileReader(CSV_FILE_PATH))) {
+            String transactionLine;
+            while ((transactionLine = csvReader.readLine()) != null) {
+                String[] transactionDetails = transactionLine.split(",");
+                String transactionId = transactionDetails[0];
+                String type = transactionDetails[1];
+                Double amount = Double.parseDouble(transactionDetails[2]);
+                String status = transactionDetails[3];
+                Date date = dateTimeSdf.parse(transactionDetails[4]);
                 TransactionDAOImpl.transactionsList.add(new Transaction(transactionId, type, amount, status, date));
             }
-        } catch (IOException | ParseException e) {
+        } catch (IOException | ParseException exception) {
             // Fail the test immediately if there is a problem parsing the setup data.
             // This prevents false positives by ensuring a correct initial state.
-            fail("Failed to parse initial CSV data during setup: " + e.getMessage());
+            fail("Failed to parse initial CSV data during setup: " + exception.getMessage());
         }
     }
 }

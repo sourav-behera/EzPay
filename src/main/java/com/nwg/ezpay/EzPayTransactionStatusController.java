@@ -15,12 +15,31 @@ import com.nwg.ezpay.model.TransactionStatus;
 import com.nwg.ezpay.service.ITransactionStatusService;
 import com.nwg.ezpay.service.TransactionStatusServiceImpl;
 
+/**
+ * Provides a command-line interface for managing transaction statuses.
+ * 
+ * <p>Supports creation, retrieval with various filters, update, and deletion
+ * of {@code TransactionStatus} records through terminal input.</p>
+ * 
+ * @author Palak Deb Patra
+ * @version 0.0.1
+ */
 public class EzPayTransactionStatusController {
 
+    /** Service layer instance for transaction status operations. */
     public static ITransactionStatusService iTransactionStatusService = new TransactionStatusServiceImpl();
+
+    /** Scanner for reading command-line inputs. */
     public static Scanner scanner = new Scanner(System.in);
+
+    /** Date formatter for parsing dates in yyyy-MM-dd format. */
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    /**
+     * Handles creation of a new {@code TransactionStatus} record.
+     * <p>Prompts user for status type, reason, and timestamp, then invokes
+     * service layer to create the record.</p>
+     */
     public static void choiceOneHandler() {
         System.out.println("Enter status type:");
         String statusType = scanner.nextLine();
@@ -41,6 +60,10 @@ public class EzPayTransactionStatusController {
         }
     }
 
+    /**
+     * Handles fetching of {@code TransactionStatus} records with filter options.
+     * <p>Supports filtering by date, date range, status type, or reason.</p>
+     */
     public static void choiceTwoHandler() {
         System.out.println("Set Filters");
         System.out.println("1. Get TransactionStatus by date");
@@ -106,6 +129,11 @@ public class EzPayTransactionStatusController {
         }
     }
 
+    /**
+     * Handles updating an existing {@code TransactionStatus} record.
+     * <p>Prompts user for all required fields to update the record and
+     * invokes the service layer update method.</p>
+     */
     public static void choiceThreeHandler() {
         System.out.println("Enter transaction status ID");
         String transactionStatusId = scanner.nextLine();
@@ -126,6 +154,11 @@ public class EzPayTransactionStatusController {
         }
     }
 
+    /**
+     * Handles deletion of a {@code TransactionStatus} record by ID.
+     * <p>Prompts for the transaction status ID and deletes the corresponding record 
+     * through the service interface.</p>
+     */
     public static void choiceFourHandler() {
         System.out.println("Enter the transaction status ID to delete");
         String transactionStatusId = scanner.nextLine();
@@ -140,6 +173,12 @@ public class EzPayTransactionStatusController {
         }
     }
 
+    /**
+     * The main method to run the command line interface application.
+     * <p>Displays the menu and invokes corresponding handler methods based on user choice.</p>
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         System.out.println("Enter choice");
         System.out.println("1. Create a new transaction status");
