@@ -1,0 +1,73 @@
+.transaction-history-card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.action-button mat-icon {
+  margin-right: 6px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  flex: 2;
+}
+
+.filter-field {
+  flex: 1;
+}
+
+.info-cell h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.info-cell p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-completed {
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+}
+
+.status-processing {
+  background: rgba(217, 119, 6, 0.1);
+  color: #d97706;
+}
+
+.status-failed {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
