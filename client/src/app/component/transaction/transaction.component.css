@@ -1,0 +1,28 @@
+.transaction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Inside your component's .css file */
+.mat-mdc-card {
+    --mat-sys-title-large-size: 1.3rem;
+    --mat-sys-title-large-weight: 500;
+    --mat-sys-title-medium-size: 0.8rem;
+    --mat-sys-title-medium-weight: 300;
+    border-radius: 0px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+}
+
+.info {
+    width: 70%;
+}
+
+.detail {
+    width: 20%;
+}
+
+.type { 
+    width: 10%;
+}
