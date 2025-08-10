@@ -4,7 +4,7 @@
             <!-- Search bar -->
             <mat-form-field appearance="outline" id="search-field">
                 <mat-label>Search</mat-label>
-                <input matInput placeholder="Search transactions" aria-label="Search transactions">
+                <input matInput placeholder="Search transactions" aria-label="Search transactions" (keyup)="getTransactionsBySearchID($event)">
             </mat-form-field>
         </div>
         <div id="filter-container">
@@ -107,7 +107,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-card id="transactions-list">
-        <mat-list *ngFor="let transaction of dataSource">
+        <mat-list *ngFor="let transaction of filteredData">
             <mat-list-item>
                 <app-transaction
                     [transactionId]="transaction.transactionId"

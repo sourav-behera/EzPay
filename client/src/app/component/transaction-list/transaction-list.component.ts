@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Transaction } from '../../model/transaction';
 
@@ -13,6 +13,8 @@ let transactions: Transaction[] = [
   new Transaction('TRX108', 'BANK', 320, 'Completed', new Date('2023-10-01'), 'Payment for groceries'),
 ];
 
+
+
 @Component({
   selector: 'app-transaction-list',
   standalone: false,
@@ -21,10 +23,26 @@ let transactions: Transaction[] = [
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TransactionListComponent {
-  dataSource: Transaction[];
+export class TransactionListComponent implements OnInit{
+  dataSource: Transaction[] = [];
+  filteredData: Transaction[] = [];
   selectedFilter: string = '';
-  constructor() {
+  constructor() {}
+  
+  ngOnInit(): void {
     this.dataSource = transactions;
+    this.filteredData = transactions;
+  }
+  
+  public getTransactionsBySearchID(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    const searchText = filterValue.trim().toLowerCase();
+    
+    if(!searchText) {
+      this.filteredData = this.dataSource;
+    }
+    this.filteredData = this.dataSource.filter(transaction => {
+      return transaction.transactionId.toLowerCase().includes(searchText);
+    })
   }
 }
