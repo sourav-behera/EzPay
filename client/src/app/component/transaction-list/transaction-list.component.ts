@@ -32,11 +32,25 @@ export class TransactionListComponent implements OnInit{
   fromDate: Date|null = null;
   toDate: Date|null = null;
   
+  // variables related to amount range
+  minimumAmount: number|null = null;
+  maximumAmount: number|null = null;
+  
+  
   constructor() {}
   
   ngOnInit(): void {
     this.dataSource = transactions;
     this.filteredData = transactions;
+  }
+  
+  //displays transactions in a range of amount
+  public getTransactionsByAmountRange(): void {
+    if(this.minimumAmount && this.maximumAmount) {
+      this.filteredData = this.dataSource.filter(transaction => {
+        return (this.minimumAmount!<=transaction.amount && transaction.amount<=this.maximumAmount!)
+      })
+    }
   }
   
   //displays transactions in a range of dates

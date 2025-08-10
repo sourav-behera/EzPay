@@ -12,7 +12,6 @@
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Filter</mat-label>
                 <mat-select [(value)]="selectedFilter">
-                <!-- <mat-select [(value)]="selectedFilter" (selectionChange)="selectDropdownFilter($event.value)"> -->
                     <mat-option value="date">Date</mat-option>
                     <mat-option value="dateRange">Date Range</mat-option>
                     <mat-option value="amountRange">Amount Range</mat-option>
@@ -39,13 +38,23 @@
                     <td>
                         <mat-form-field appearance="outline" class="filter-input-field">
                             <mat-label>Min Amount</mat-label>
-                            <input matInput type="number" placeholder="0" aria-label="Minimum Amount">
+                            <input matInput 
+                                type="number" 
+                                placeholder="0" 
+                                aria-label="Minimum Amount"
+                                [(ngModel)]="minimumAmount"
+                                (keyup)="getTransactionsByAmountRange()">
                         </mat-form-field>
                     </td>
                     <td>
                         <mat-form-field appearance="outline" class="filter-input-field">
                             <mat-label>Max Amount</mat-label>
-                            <input matInput type="number" placeholder="1000" aria-label="Maximum Amount">
+                            <input matInput 
+                                type="number" 
+                                placeholder="1000" 
+                                aria-label="Maximum Amount"
+                                [(ngModel)]="maximumAmount"
+                                (keyup)="getTransactionsByAmountRange()">
                         </mat-form-field>
                     </td>
                  </table>
