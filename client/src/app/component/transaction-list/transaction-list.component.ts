@@ -27,11 +27,32 @@ export class TransactionListComponent implements OnInit{
   dataSource: Transaction[] = [];
   filteredData: Transaction[] = [];
   selectedFilter: string = '';
+  
+  //variables related to date range
+  fromDate: Date|null = null;
+  toDate: Date|null = null;
+  
   constructor() {}
   
   ngOnInit(): void {
     this.dataSource = transactions;
     this.filteredData = transactions;
+  }
+  
+  //displays transactions in a range of dates
+  public getTransactionsByDateRange(): void {
+    if(this.toDate && this.fromDate) {
+      this.toDate.setHours(0, 0, 0, 0);
+      this.fromDate.setHours(0, 0, 0, 0);
+      console.log(this.toDate);
+      console.log(this.fromDate);
+      this.filteredData = this.dataSource.filter(transaction => {
+        const date = new Date(transaction.date);
+        date.setHours(0, 0, 0, 0);
+        return (this.fromDate!<=date && date<=this.toDate!)
+      });
+      console.log(this.filteredData);
+    }
   }
   
   // displays transactions on the selected Date

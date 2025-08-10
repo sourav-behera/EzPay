@@ -73,7 +73,12 @@
                     <td>
                         <mat-form-field appearance="outline" class="filter-input-field">
                             <mat-label>From</mat-label>
-                            <input matInput [matDatepicker]="fromPicker" placeholder="Select date" aria-label="From Date">
+                            <input matInput 
+                                [matDatepicker]="fromPicker" 
+                                placeholder="Select date" 
+                                aria-label="From Date" 
+                                [(ngModel)]="fromDate" 
+                                (dateChange)="getTransactionsByDateRange()">
                             <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
                             <mat-datepicker #fromPicker></mat-datepicker>
                         </mat-form-field>
@@ -81,7 +86,12 @@
                     <td>
                         <mat-form-field appearance="outline" class="filter-input-field">
                             <mat-label>To</mat-label>
-                            <input matInput [matDatepicker]="toPicker" placeholder="Select date" aria-label="To Date">
+                            <input matInput 
+                                [matDatepicker]="toPicker" 
+                                placeholder="Select date" 
+                                aria-label="To Date"
+                                [(ngModel)]="toDate"
+                                (dateChange)="getTransactionsByDateRange()">
                             <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
                             <mat-datepicker #toPicker></mat-datepicker>
                         </mat-form-field>
