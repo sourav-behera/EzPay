@@ -17,12 +17,19 @@ import { TransactionStatus } from '../../model/transaction-status';
   selector: 'app-transaction-status-component',
   standalone: false,
   templateUrl: './transaction-status-component.component.html',
-  styleUrls: ['./transaction-status-component.component.css']
+  styleUrls: ['./transaction-status-component.component.css'],
 })
-export class TransactionStatusComponentComponent implements OnInit, AfterViewInit {
-
+export class TransactionStatusComponentComponent
+  implements OnInit, AfterViewInit
+{
   /** Table columns */
-  public displayedColumns: string[] = ['icon', 'info', 'amount', 'status', 'action'];
+  public displayedColumns: string[] = [
+    'icon',
+    'info',
+    'amount',
+    'status',
+    'action',
+  ];
   public dataSource = new MatTableDataSource<ITransactionStatus>();
 
   /** UI state */
@@ -78,11 +85,51 @@ export class TransactionStatusComponentComponent implements OnInit, AfterViewIni
 
     // Using mock data directly with new 'from' and 'to' fields
     const mockData: ITransactionStatus[] = [
-      new TransactionStatus('TXN789012', 'Debit', -250.00, 'Completed', new Date('2025-08-08T14:30:00'), 'Alice', 'Netflix'),
-      new TransactionStatus('TXN789011', 'Debit', -89.45, 'Completed', new Date('2025-08-07T10:15:00'), 'Alice', 'Amazon'),
-      new TransactionStatus('TXN789010', 'Debit', -500.00, 'Processing', new Date('2025-08-07T09:45:00'), 'Alice', 'Car Insurance'),
-      new TransactionStatus('TXN789009', 'Credit', 3500.00, 'Completed', new Date('2024-12-28T16:00:00'), 'Company Ltd', 'Alice'),
-      new TransactionStatus('TXN789008', 'Debit', -45.99, 'Failed', new Date('2024-12-27T18:20:00'), 'Alice', 'Spotify')
+      new TransactionStatus(
+        'TXN789012',
+        'Debit',
+        -250.0,
+        'Completed',
+        new Date('2025-08-08T14:30:00'),
+        'Alice',
+        'Netflix'
+      ),
+      new TransactionStatus(
+        'TXN789011',
+        'Debit',
+        -89.45,
+        'Completed',
+        new Date('2025-08-07T10:15:00'),
+        'Alice',
+        'Amazon'
+      ),
+      new TransactionStatus(
+        'TXN789010',
+        'Debit',
+        -500.0,
+        'Processing',
+        new Date('2025-08-07T09:45:00'),
+        'Alice',
+        'Car Insurance'
+      ),
+      new TransactionStatus(
+        'TXN789009',
+        'Credit',
+        3500.0,
+        'Completed',
+        new Date('2024-12-28T16:00:00'),
+        'Company Ltd',
+        'Alice'
+      ),
+      new TransactionStatus(
+        'TXN789008',
+        'Debit',
+        -45.99,
+        'Failed',
+        new Date('2024-12-27T18:20:00'),
+        'Alice',
+        'Spotify'
+      ),
     ];
 
     setTimeout(() => {
@@ -94,7 +141,9 @@ export class TransactionStatusComponentComponent implements OnInit, AfterViewIni
 
   /** Applies search + status filter */
   public applyFilter(): void {
-    const searchTerm = this.filterTerm.value ? this.filterTerm.value.trim().toLowerCase() : '';
+    const searchTerm = this.filterTerm.value
+      ? this.filterTerm.value.trim().toLowerCase()
+      : '';
     const statusTypeFilter = this.selectedStatusType.value;
     this.dataSource.filter = JSON.stringify({ searchTerm, statusTypeFilter });
 
@@ -105,9 +154,14 @@ export class TransactionStatusComponentComponent implements OnInit, AfterViewIni
 
   /** Custom filter for both search & dropdown filter */
   private setupCustomFilter(): void {
-    this.dataSource.filterPredicate = (data: ITransactionStatus, filter: string): boolean => {
+    this.dataSource.filterPredicate = (
+      data: ITransactionStatus,
+      filter: string
+    ): boolean => {
       const { searchTerm, statusTypeFilter } = JSON.parse(filter);
-      const statusTypeMatch = statusTypeFilter === 'All' || data.status.toLowerCase() === statusTypeFilter.toLowerCase();
+      const statusTypeMatch =
+        statusTypeFilter === 'All' ||
+        data.status.toLowerCase() === statusTypeFilter.toLowerCase();
       const globalMatch =
         data.type.toLowerCase().includes(searchTerm) ||
         data.transactionId.toLowerCase().includes(searchTerm) ||
@@ -120,10 +174,14 @@ export class TransactionStatusComponentComponent implements OnInit, AfterViewIni
   /** Returns icon name based on status */
   public getStatusIcon(statusType: string): string {
     switch (statusType) {
-      case 'Completed': return 'completed-status';
-      case 'Processing': return 'processing-status';
-      case 'Failed': return 'failed-status';
-      default: return 'info';
+      case 'Completed':
+        return 'completed-status';
+      case 'Processing':
+        return 'processing-status';
+      case 'Failed':
+        return 'failed-status';
+      default:
+        return 'info';
     }
   }
 
@@ -136,5 +194,11 @@ export class TransactionStatusComponentComponent implements OnInit, AfterViewIni
   public closeTransactionDetails(): void {
     this.selectedTransaction = null;
   }
-}
 
+  public showPaymentDetails = false;
+
+  copy(text: string) {
+    if (!text) return;
+    navigator.clipboard?.writeText(text);
+  }
+}

@@ -1,8 +1,7 @@
-
 /* Card and table styling */
 .transaction-history-card {
   width: 100%; /* Changed to full width */
-  height:100%;
+  height: 100%;
   margin: 0; /* Removed fixed margin */
   padding: 16px; /* Adjusted padding for full-screen view */
   border-radius: 0; /* Removed border radius for a clean full-screen look */
@@ -68,11 +67,11 @@
 }
 
 .amount.positive {
-  color: #34C759;
+  color: #34c759;
 }
 
 .amount.negative {
-  color: #FF3B30;
+  color: #ff3b30;
 }
 
 .status-badge {
@@ -93,15 +92,15 @@
 }
 
 .status-badge.status-completed {
-  background-color: #34C759;
+  background-color: #34c759;
 }
 
 .status-badge.status-processing {
-  background-color: #FF9500;
+  background-color: #ff9500;
 }
 
 .status-badge.status-failed {
-  background-color: #FF3B30;
+  background-color: #ff3b30;
 }
 
 .mat-paginator {
@@ -194,9 +193,141 @@
 }
 
 .detail-item .value.positive {
-  color: #34C759;
+  color: #34c759;
 }
 
 .detail-item .value.negative {
-  color: #FF3B30;
+  color: #ff3b30;
+}
+/* -------------- */
+/* Card + overlay */
+.txn-card {
+  width: 520px;
+  max-width: 92vw;
+  border-radius: 14px;
+}
+.transaction-details-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+/* Header */
+.txn-header {
+  position: relative;
+  padding: 8px 16px 4px;
+  text-align: left;
+}
+.drag-bar {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: #e6e8f0;
+  margin: 6px auto 10px;
+}
+.title {
+  margin: 0;
+  font-weight: 700;
+  color: #2b2f3a;
+}
+.close-btn {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+
+/* Content blocks */
+.txn-content {
+  padding: 0 16px 16px;
+}
+.kv {
+  padding: 14px 0;
+}
+.kv.small {
+  padding: 8px 0;
+}
+
+.kv-label {
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.kv-value {
+  font-size: 15px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #f4f6f8;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.id-row button {
+  margin-left: 2px;
+}
+
+/* status dot icon (your registered SVGs are 24px; make it tiny) */
+.status-dot {
+  width: 12px;
+  height: 12px;
+  transform: scale(0.5);
+}
+
+/* Amount colors */
+.positive {
+  color: #2ecc71;
+  font-weight: 600;
+}
+.negative {
+  color: #eb4d4b;
+  font-weight: 600;
+}
+
+/* Status badge inside accordion */
+.status-badge-details {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: #eef2ff;
+  color: #3b82f6;
+}
+.status-badge-details.completed {
+  background: #eaf8f0;
+  color: #2e7d32;
+}
+.status-badge-details.processing {
+  background: #fff4e5;
+  color: #b26a00;
+}
+.status-badge-details.failed {
+  background: #ffe9e9;
+  color: #c62828;
+}
+
+/* Accordion row */
+.accordion {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #111827;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.accordion-body {
+  padding-bottom: 8px;
 }

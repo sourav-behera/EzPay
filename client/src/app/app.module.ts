@@ -7,8 +7,6 @@ import { AppComponent } from './app.component';
 import { TransactionComponentComponent } from './component/transaction-component/transaction-component.component';
 import { TransactionStatusComponentComponent } from './component/transaction-status-component/transaction-status-component.component';
 
-
-
 // Import all the Angular Material modules you are using
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,20 +19,20 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     AppComponent,
     TransactionComponentComponent,
-    TransactionStatusComponentComponent
+    TransactionStatusComponentComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    
-    
+
     // Add all the imported Angular Material modules here
     MatCardModule,
     MatIconModule,
@@ -46,10 +44,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatDividerModule,
   ],
   providers: [],
   // bootstrap: [AppComponent]
-  bootstrap: [TransactionStatusComponentComponent] // Change the bootstrap to the component you want to start with
+  bootstrap: [TransactionStatusComponentComponent], // Change the bootstrap to the component you want to start with
 })
-export class AppModule { }
+export class AppModule {}
