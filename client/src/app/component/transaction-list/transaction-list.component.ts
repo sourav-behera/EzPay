@@ -13,6 +13,7 @@ let transactions: Transaction[] = [
   new Transaction('TRX108', 'BANK', 320, 'Completed', new Date('2023-10-04'), 'Payment for groceries'),
   new Transaction('TRX108', 'BANK', 320, 'Completed', new Date('2025-08-08'), 'Payment for groceries'),
   new Transaction('TRX108', 'UPI', 1000, 'Pending', new Date('2025-08-08'), 'Payment for groceries'),
+  new Transaction('TRX108', 'UPI', 1000, 'Failed', new Date('2025-08-08'), 'Friendly Transfer'),
 ];
 
 @Component({
@@ -42,6 +43,13 @@ export class TransactionListComponent implements OnInit{
   ngOnInit(): void {
     this.dataSource = transactions;
     this.filteredData = transactions;
+  }
+  
+  //displays transactions equal to @param status
+  public getTransactionsByStatus(status: string) :void {
+    this.filteredData = this.dataSource.filter(transaction => {
+      return transaction.status === status
+    })
   }
   
   //displays transactions in a range of amount

@@ -62,10 +62,10 @@
                 <!-- Status Filter -->
                 <mat-form-field appearance="outline" class="filter-input-field" *ngIf="selectedFilter === 'status'">
                     <mat-label>Status</mat-label>
-                    <mat-select>
-                        <mat-option value="completed">Completed</mat-option>
-                        <mat-option value="pending">Pending</mat-option>
-                        <mat-option value="failed">Failed</mat-option>
+                    <mat-select (selectionChange)="getTransactionsByStatus($event.value)">
+                        <mat-option value="Completed">Completed</mat-option>
+                        <mat-option value="Pending">Pending</mat-option>
+                        <mat-option value="Failed">Failed</mat-option>
                     </mat-select>
                 </mat-form-field>
                 
