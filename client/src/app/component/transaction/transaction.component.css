@@ -1,28 +1,67 @@
 .transaction {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
 }
 
-/* Inside your component's .css file */
-.mat-mdc-card {
-    --mat-sys-title-large-size: 1.3rem;
-    --mat-sys-title-large-weight: 500;
-    --mat-sys-title-medium-size: 0.8rem;
-    --mat-sys-title-medium-weight: 300;
-    border-radius: 0px;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+.section {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #212121;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #757575;
+}
+
+.type {
+  background-color: #f3f6fc;
+  text-align: center;
 }
 
 .info {
-    width: 70%;
+  background-color: #ffffff;
 }
 
-.detail {
-    width: 20%;
+.amount {
+  background-color: #f9f9f9;
+  text-align: right;
 }
 
-.type { 
-    width: 10%;
+.amount-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1b5e20;
+}
+
+.status {
+  &.pending {
+    color: #ff9800;
+  }
+  &.completed {
+    color: #4caf50;
+  }
+  &.failed {
+    color: #f44336;
+  }
+}
+
+/* Remove default Material card padding overrides if needed */
+:host ::ng-deep .mat-mdc-card {
+  box-shadow: none;
+  background: transparent;
 }

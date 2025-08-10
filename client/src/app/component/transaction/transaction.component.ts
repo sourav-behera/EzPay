@@ -9,7 +9,8 @@ import { Component, Input } from '@angular/core';
 export class TransactionComponent {
   @Input() transactionId!: string;
   @Input() type!: string;
-  @Input() amount!: string;
+  @Input() amount!: number;
   @Input() status!: string;
-  @Input() date!: string;
+  @Input() date!: Date;
+  @Input() message?: string;
 }

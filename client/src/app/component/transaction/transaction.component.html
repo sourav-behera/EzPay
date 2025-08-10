@@ -1,21 +1,25 @@
 <div class="transaction">
-    <mat-card class="type">
-        <mat-card-content>
-            <mat-card-title>{{type}}</mat-card-title>
-            <mat-card-subtitle>ID: {{transactionId}}</mat-card-subtitle>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="info">
-        <mat-card-content>
-            <mat-card-title>Transaction Label</mat-card-title>
-            <mat-card-subtitle>{{date}}</mat-card-subtitle>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="amount">
-        <mat-card-content>
-            <mat-card-title>{{amount}}</mat-card-title>
-            <mat-card-subtitle>{{status}}</mat-card-subtitle>
-        </mat-card-content>
-    </mat-card>
+  <!-- Transaction Type -->
+  <mat-card class="section type">
+    <mat-card-content>
+      <div class="title">{{ type }}</div>
+      <div class="subtitle">ID: {{ transactionId }}</div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Transaction Info -->
+  <mat-card class="section info">
+    <mat-card-content>
+      <div class="title"> Message </div>
+      <div class="subtitle">{{ date | date:'medium' }}</div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Transaction Amount & Status -->
+  <mat-card class="section amount">
+    <mat-card-content>
+      <div class="title amount-text">{{ amount }}</div>
+      <div class="subtitle status" [ngClass]="status.toLowerCase()">{{ status }}</div>
+    </mat-card-content>
+  </mat-card>
 </div>
-<mat-divider></mat-divider>
