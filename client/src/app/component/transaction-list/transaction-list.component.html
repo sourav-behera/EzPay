@@ -27,9 +27,9 @@
                     *ngIf="selectedFilter === 'type'"
                     >
                     <mat-label>Type</mat-label>
-                    <mat-select>
-                        <mat-option value="upi">UPI Payment</mat-option>
-                        <mat-option value="bank">Bank Transfer</mat-option>
+                    <mat-select (selectionChange)="getTransactionsByType($event.value)">
+                        <mat-option value="UPI">UPI Payment</mat-option>
+                        <mat-option value="BANK">Bank Transfer</mat-option>
                     </mat-select>
                 </mat-form-field>
 

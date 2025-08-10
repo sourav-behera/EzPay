@@ -45,6 +45,13 @@ export class TransactionListComponent implements OnInit{
     this.filteredData = transactions;
   }
   
+  // displays transactions accordind to type chosen
+  public getTransactionsByType(type:string) :void {
+    this.filteredData = this.dataSource.filter(transaction => {
+      return transaction.type === type
+    })
+  }
+  
   //displays transactions equal to @param status
   public getTransactionsByStatus(status: string) :void {
     this.filteredData = this.dataSource.filter(transaction => {
