@@ -1,13 +1,7 @@
-/**
- * @fileoverview Unit tests for the TransactionStatus model.
- * @version 1.0.0
- */
-import { TransactionStatus } from './transaction-status';
+import { Transaction } from './transaction';
 
-describe('TransactionStatus', () => {
-  it('should create an instance with provided values', () => {
-    // Pass mock data to the constructor to create a valid instance.
-    const mockData = new TransactionStatus('TXN12345', 'Debit', 150.00, 'Completed', new Date());
-    expect(mockData).toBeTruthy();
+describe('Transaction', () => {
+  it('should create an instance', () => {
+    expect(new Transaction()).toBeTruthy();
   });
 });
