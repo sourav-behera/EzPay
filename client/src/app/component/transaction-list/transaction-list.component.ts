@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Transaction } from '../../model/transaction';
+import { PageEvent } from '@angular/material/paginator';
 
 let transactions: Transaction[] = [
   new Transaction('TRX101', 'UPI', 500, 'Completed', new Date('2023-10-01'), 'Payment for groceries'),
@@ -27,6 +28,7 @@ let transactions: Transaction[] = [
 export class TransactionListComponent implements OnInit{
   dataSource: Transaction[] = [];
   filteredData: Transaction[] = [];
+  pagedData: Transaction[] = [];
   selectedFilter: string = '';
   
   //variables related to date range
@@ -37,12 +39,16 @@ export class TransactionListComponent implements OnInit{
   minimumAmount: number|null = null;
   maximumAmount: number|null = null;
   
+  // pagination
+  pageSize: number = 10;
+  currentPage: number = 0;
   
   constructor() {}
   
   ngOnInit(): void {
     this.dataSource = transactions;
     this.filteredData = transactions;
+    this.pagedData = this.filteredData.slice(0, this.pageSize);
   }
   
   // handles sorting
@@ -91,6 +97,7 @@ export class TransactionListComponent implements OnInit{
         return value;
       });
     }
+    this.updatePagedData();
   }
   
   // displays transactions accordind to type chosen
@@ -98,6 +105,7 @@ export class TransactionListComponent implements OnInit{
     this.filteredData = this.dataSource.filter(transaction => {
       return transaction.type === type
     })
+    this.updatePagedData();
   }
   
   //displays transactions equal to @param status
@@ -105,6 +113,7 @@ export class TransactionListComponent implements OnInit{
     this.filteredData = this.dataSource.filter(transaction => {
       return transaction.status === status
     })
+    this.updatePagedData();
   }
   
   //displays transactions in a range of amount
@@ -114,6 +123,7 @@ export class TransactionListComponent implements OnInit{
         return (this.minimumAmount!<=transaction.amount && transaction.amount<=this.maximumAmount!)
       })
     }
+    this.updatePagedData();
   }
   
   //displays transactions in a range of dates
@@ -127,6 +137,7 @@ export class TransactionListComponent implements OnInit{
         return (this.fromDate!<=date && date<=this.toDate!)
       });
     }
+    this.updatePagedData();
   }
   
   // displays transactions on the selected Date
@@ -134,6 +145,7 @@ export class TransactionListComponent implements OnInit{
     this.filteredData = this.dataSource.filter(transaction => {
       return ( transaction.date.getDate() === selectedDate.getDate() && transaction.date.getMonth() === selectedDate.getMonth() && transaction.date.getFullYear() === selectedDate.getFullYear() )
     });
+    this.updatePagedData();
   }
   
   // displays transactions that contains the searchText in transactionID
@@ -147,5 +159,30 @@ export class TransactionListComponent implements OnInit{
     this.filteredData = this.dataSource.filter(transaction => {
       return transaction.transactionId.toLowerCase().includes(searchText);
     })
+    this.updatePagedData();
+  }
+
+  // handles pagination
+  public handlePageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedData();
+  }
+
+  public updatePagedData(): void {
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pagedData = this.filteredData.slice(startIndex, endIndex);
+  }
+
+  // resets all filters and sorts
+  public resetForm(): void {
+    this.selectedFilter = '';
+    this.fromDate = null;
+    this.toDate = null;
+    this.minimumAmount = null;
+    this.maximumAmount = null;
+    this.filteredData = [...this.dataSource];
+    this.pagedData = this.filteredData.slice(0, this.pageSize);
   }
 }

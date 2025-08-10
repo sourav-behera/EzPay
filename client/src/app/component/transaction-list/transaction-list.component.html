@@ -123,11 +123,13 @@
                     </mat-optgroup>
                 </mat-select>
             </mat-form-field>
+            <!-- Reset Filters and Sorts -->
+            <!-- <button mat-raised-button (click)="resetForm()">Reset</button> -->
         </div>
     </div>
     <mat-divider></mat-divider>
     <mat-card id="transactions-list">
-        <mat-list *ngFor="let transaction of filteredData">
+        <mat-list *ngFor="let transaction of pagedData">
             <mat-list-item>
                 <app-transaction
                     [transactionId]="transaction.transactionId"
@@ -143,10 +145,11 @@
     </mat-card>
     <div id="pagination-container">
         <mat-paginator
-            [length]="100"
+            [length]="filteredData.length"
             [pageSize]="10"
             [pageSizeOptions]="[5, 10, 20]"
             aria-label="Select page of transactions"
+            (page)="handlePageChange($event)"
         >
         </mat-paginator>
     </div>
