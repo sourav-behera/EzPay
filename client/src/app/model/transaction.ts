@@ -1,13 +1,6 @@
 import { ITransaction } from "../interface/itransaction";
 
 export class Transaction implements ITransaction {
-    // private _transactionId: string;
-    // private _type: string;
-    // private _amount: number;
-    // private _status: string;
-    // private _date: Date;
-    // private _message?: string;
-    
     constructor(
         private _transactionId: string,
         private _type: string,
@@ -60,13 +53,4 @@ export class Transaction implements ITransaction {
     public set message(newMessage: string) {
         this._message = newMessage.trim();
     }
-
-    // constructor(transactionId: string, type: string, amount: number, status: string, date: Date, message?: string) {
-    //     this._transactionId = transactionId;
-    //     this._type = type;
-    //     this._amount = amount;
-    //     this._status = status;
-    //     this._date = date;
-    //     message ? this._message = message : this._message = 'Transaction on ' + date.toLocaleDateString();
-    // }
 }

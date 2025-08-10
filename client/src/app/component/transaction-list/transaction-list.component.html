@@ -12,6 +12,7 @@
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Filter</mat-label>
                 <mat-select [(value)]="selectedFilter">
+                <!-- <mat-select [(value)]="selectedFilter" (selectionChange)="selectDropdownFilter($event.value)"> -->
                     <mat-option value="date">Date</mat-option>
                     <mat-option value="dateRange">Date Range</mat-option>
                     <mat-option value="amountRange">Amount Range</mat-option>
@@ -62,7 +63,7 @@
                 <!-- Date Filter -->
                 <mat-form-field appearance="outline" class="filter-input-field" *ngIf="selectedFilter === 'date'">
                     <mat-label>Date</mat-label>
-                    <input matInput [matDatepicker]="picker" placeholder="Select date" aria-label="Transaction Date">
+                    <input matInput [matDatepicker]="picker" placeholder="Select date" aria-label="Transaction Date" (dateChange)="getTransactionByDate($event.value)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
