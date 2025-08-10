@@ -111,15 +111,15 @@
             <!-- Sort dropdown -->
             <mat-form-field appearance="outline" class="filter-field">
                 <mat-label>Sort By</mat-label>
-                <mat-select>
-                    <mat-option value="status">Transaction ID</mat-option>
+                <mat-select (selectionChange)="handleSorting($event.value)">
+                    <mat-option value="transactionId">Transaction ID</mat-option>
                     <mat-optgroup label="Date">
-                        <mat-option value="date">Latest</mat-option>
-                        <mat-option value="date">Oldest</mat-option>
+                        <mat-option value="latestDate">Latest</mat-option>
+                        <mat-option value="oldestDate">Oldest</mat-option>
                     </mat-optgroup>
                     <mat-optgroup label="Amount">
-                        <mat-option value="amount">Increasing</mat-option>
-                        <mat-option value="amount">Decreasing</mat-option>
+                        <mat-option value="increasingAmount">Increasing</mat-option>
+                        <mat-option value="decreasingAmount">Decreasing</mat-option>
                     </mat-optgroup>
                 </mat-select>
             </mat-form-field>

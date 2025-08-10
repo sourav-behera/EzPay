@@ -11,9 +11,9 @@ let transactions: Transaction[] = [
   new Transaction('TRX106', 'BANK', 600, 'Completed', new Date('2023-10-03'), 'Payment for groceries'),
   new Transaction('TRX107', 'UPI', 550, 'Pending',   new Date('2023-10-04'), 'Payment for groceries'),
   new Transaction('TRX108', 'BANK', 320, 'Completed', new Date('2023-10-04'), 'Payment for groceries'),
-  new Transaction('TRX108', 'BANK', 320, 'Completed', new Date('2025-08-08'), 'Payment for groceries'),
-  new Transaction('TRX108', 'UPI', 1000, 'Pending', new Date('2025-08-08'), 'Payment for groceries'),
-  new Transaction('TRX108', 'UPI', 1000, 'Failed', new Date('2025-08-08'), 'Friendly Transfer'),
+  new Transaction('TRX109', 'BANK', 320, 'Completed', new Date('2025-08-08'), 'Payment for groceries'),
+  new Transaction('TRX110', 'UPI', 1000, 'Pending', new Date('2025-08-08'), 'Payment for groceries'),
+  new Transaction('TRX111', 'UPI', 1000, 'Failed', new Date('2025-08-08'), 'Friendly Transfer'),
 ];
 
 @Component({
@@ -45,6 +45,54 @@ export class TransactionListComponent implements OnInit{
     this.filteredData = transactions;
   }
   
+  // handles sorting
+  public handleSorting(sortBy: string): void {
+    if(sortBy === 'transactionId') {
+      this.filteredData.sort((a, b) => {
+        // depends on the pattern of transactionId generated
+        const idFirst = parseInt(a.transactionId.replace(/\D/g, ''), 10);
+        const idSecond = parseInt(b.transactionId.replace(/\D/g, ''), 10);
+        return idSecond - idFirst;
+      });
+    }
+    else if(sortBy === 'latestDate') {
+      this.filteredData.sort((a, b) => {
+        let value:number = b.date.getTime() - a.date.getTime();
+        if(value == 0) {
+          return b.date.getTime() - a.date.getTime();
+        }
+        return value;
+      });
+    }
+    else if(sortBy === 'oldestDate') {
+      this.filteredData.sort((a, b) => {
+        let value:number = a.date.getTime() - b.date.getTime();
+        if(value == 0) {
+          return b.date.getTime() - a.date.getTime();
+        }
+        return value;
+      });
+    }
+    else if(sortBy === 'increasingAmount') {
+      this.filteredData.sort((a, b) => {
+        let value:number = a.amount - b.amount;
+        if(value == 0) {
+          return b.date.getTime() - a.date.getTime();
+        }
+        return value;
+      });
+    }
+    else if(sortBy === 'decreasingAmount') {
+      this.filteredData.sort((a,b) => {
+        let value:number = b.amount - a.amount;
+        if(value == 0) {
+          return b.date.getTime() - a.date.getTime();
+        }
+        return value;
+      });
+    }
+  }
+  
   // displays transactions accordind to type chosen
   public getTransactionsByType(type:string) :void {
     this.filteredData = this.dataSource.filter(transaction => {
@@ -73,14 +121,11 @@ export class TransactionListComponent implements OnInit{
     if(this.toDate && this.fromDate) {
       this.toDate.setHours(0, 0, 0, 0);
       this.fromDate.setHours(0, 0, 0, 0);
-      console.log(this.toDate);
-      console.log(this.fromDate);
       this.filteredData = this.dataSource.filter(transaction => {
         const date = new Date(transaction.date);
         date.setHours(0, 0, 0, 0);
         return (this.fromDate!<=date && date<=this.toDate!)
       });
-      console.log(this.filteredData);
     }
   }
   
