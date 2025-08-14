@@ -90,7 +90,7 @@ export class TransactionListComponent implements OnInit{
    * Fetches the latest data from the service and updates the component's view.
    */
   private refreshData(): void {
-    this.filteredData = this.transactionService.getTransactions();
+    this.transactionService.getTransactions().subscribe(data => this.filteredData = data);
     this.currentPage = 0; // Reset to the first page whenever data changes
     this.updatePagedData();
   }

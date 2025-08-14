@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { transactions } from '../../util/data';
 import { Transaction } from '../model/transaction';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,8 @@ export class TransactionService {
   /**
    * Returns a copy of the current transactions array.
    */
-  public getTransactions(): Transaction[] {
-    return [...this.currentTransactions];
+  public getTransactions(): Observable<Transaction[]> {
+    return of([...this.currentTransactions]);
   }
   
   /**
