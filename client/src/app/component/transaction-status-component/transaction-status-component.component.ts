@@ -9,9 +9,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormControl } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
-
 import { ITransactionStatus } from '../../interface/itransaction-status';
+import { TransactionStatusService } from '../../services/transaction-status.service';
 import { TransactionStatus } from '../../model/transaction-status';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-transaction-status-component',
@@ -20,8 +22,7 @@ import { TransactionStatus } from '../../model/transaction-status';
   styleUrls: ['./transaction-status-component.component.css'],
 })
 export class TransactionStatusComponentComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   /** Table columns */
   public displayedColumns: string[] = [
     'icon',
@@ -47,9 +48,12 @@ export class TransactionStatusComponentComponent
   /** Status filter types */
   public statusTypes: string[] = ['All', 'Completed', 'Processing', 'Failed'];
 
+  mockData: TransactionStatus[] = [];
+
   constructor(
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private transactionStatusService: TransactionStatusService
   ) {
     // Register custom SVG icons for the status types.
     const getSvg = (color: string) =>
@@ -68,10 +72,17 @@ export class TransactionStatusComponentComponent
     );
   }
 
+
+
   ngOnInit(): void {
     this.fetchTransactionHistory();
     this.filterTerm.valueChanges.subscribe(() => this.applyFilter());
     this.selectedStatusType.valueChanges.subscribe(() => this.applyFilter());
+    // Fetch transaction data from the service
+    this.transactionStatusService.getData$().subscribe((data: TransactionStatus[]) => {
+      this.mockData = data;
+    });
+
   }
 
   ngAfterViewInit(): void {
@@ -82,58 +93,11 @@ export class TransactionStatusComponentComponent
   /** Loads mock transaction history with more details */
   private fetchTransactionHistory(): void {
     this.isLoadingResults = true;
+    
 
-    // Using mock data directly with new 'from' and 'to' fields
-    const mockData: ITransactionStatus[] = [
-      new TransactionStatus(
-        'TXN789012',
-        'Debit',
-        -250.0,
-        'Completed',
-        new Date('2025-08-08T14:30:00'),
-        'Alice',
-        'Netflix'
-      ),
-      new TransactionStatus(
-        'TXN789011',
-        'Debit',
-        -89.45,
-        'Completed',
-        new Date('2025-08-07T10:15:00'),
-        'Alice',
-        'Amazon'
-      ),
-      new TransactionStatus(
-        'TXN789010',
-        'Debit',
-        -500.0,
-        'Processing',
-        new Date('2025-08-07T09:45:00'),
-        'Alice',
-        'Car Insurance'
-      ),
-      new TransactionStatus(
-        'TXN789009',
-        'Credit',
-        3500.0,
-        'Completed',
-        new Date('2024-12-28T16:00:00'),
-        'Company Ltd',
-        'Alice'
-      ),
-      new TransactionStatus(
-        'TXN789008',
-        'Debit',
-        -45.99,
-        'Failed',
-        new Date('2024-12-27T18:20:00'),
-        'Alice',
-        'Spotify'
-      ),
-    ];
 
     setTimeout(() => {
-      this.dataSource.data = mockData;
+      this.dataSource.data = this.mockData;
       this.setupCustomFilter();
       this.isLoadingResults = false;
     }, 1000); // 1-second delay
