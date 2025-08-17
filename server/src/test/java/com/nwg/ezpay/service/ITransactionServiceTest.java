@@ -1,12 +1,13 @@
 package com.nwg.ezpay.service;
 
+import com.nwg.ezpay.entity.Transaction;
 import com.nwg.ezpay.exception.InvalidDateFormatException;
 import com.nwg.ezpay.exception.InvalidRangeException;
 import com.nwg.ezpay.exception.InvalidTransactionIDException;
 import com.nwg.ezpay.exception.InvalidTransactionObjectException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusException;
 import com.nwg.ezpay.exception.InvalidTransactionTypeException;
-import com.nwg.ezpay.model.Transaction;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

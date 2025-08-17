@@ -1,4 +1,4 @@
-package com.nwg.ezpay.model;
+package com.nwg.ezpay.entity;
 
 import java.util.Date;
 

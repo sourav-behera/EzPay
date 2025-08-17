@@ -1,4 +1,4 @@
-package com.nwg.ezpay.dao;
+package com.nwg.ezpay.repository;
 
 import java.io.BufferedReader;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.nwg.ezpay.model.TransactionStatus;
+import com.nwg.ezpay.entity.TransactionStatus;
 
 /**
  * This class contains the implementation for the transaction status data access object.

@@ -6,12 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+import com.nwg.ezpay.entity.TransactionStatus;
 import com.nwg.ezpay.exception.InvalidDateFormatException;
 import com.nwg.ezpay.exception.InvalidRangeException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusIdException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusObjectException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusException;
-import com.nwg.ezpay.model.TransactionStatus;
 import com.nwg.ezpay.service.ITransactionStatusService;
 import com.nwg.ezpay.service.TransactionStatusServiceImpl;
 

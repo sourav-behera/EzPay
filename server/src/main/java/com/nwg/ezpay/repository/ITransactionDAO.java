@@ -1,9 +1,10 @@
-package com.nwg.ezpay.dao;
+package com.nwg.ezpay.repository;
 
 import java.util.List;
-import java.util.Date;
 
-import com.nwg.ezpay.model.Transaction;
+import com.nwg.ezpay.entity.Transaction;
+
+import java.util.Date;
 
 /**
  * This interface contains method declaration for the Transaction DAO

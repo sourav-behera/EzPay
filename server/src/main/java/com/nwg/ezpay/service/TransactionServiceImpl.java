@@ -19,9 +19,9 @@ import com.nwg.ezpay.exception.InvalidTransactionIDException;
 import com.nwg.ezpay.exception.InvalidTransactionObjectException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusException;
 import com.nwg.ezpay.exception.InvalidTransactionTypeException;
-import com.nwg.ezpay.model.Transaction;
-import com.nwg.ezpay.dao.ITransactionDAO;
-import com.nwg.ezpay.dao.TransactionDAOImpl;
+import com.nwg.ezpay.repository.ITransactionDAO;
+import com.nwg.ezpay.repository.TransactionDAOImpl;
+import com.nwg.ezpay.entity.Transaction;
 
 public class TransactionServiceImpl implements ITransactionService {
 

@@ -1,6 +1,9 @@
-package com.nwg.ezpay.dao;
+package com.nwg.ezpay.repository;
 
 import java.util.List;
+
+import com.nwg.ezpay.entity.Transaction;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,8 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-
-import com.nwg.ezpay.model.Transaction;
 
 /**
  * This class contains the implementation for the transaction data access object.

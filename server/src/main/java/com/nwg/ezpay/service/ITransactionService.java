@@ -3,6 +3,8 @@ package com.nwg.ezpay.service;
 import java.util.List;
 import java.util.Date;
 
+import com.nwg.ezpay.entity.Transaction;
+
 /**
  * This interface contains method declaration for the Transaction Service
  * 
@@ -18,7 +20,6 @@ import com.nwg.ezpay.exception.InvalidTransactionIDException;
 import com.nwg.ezpay.exception.InvalidTransactionObjectException;
 import com.nwg.ezpay.exception.InvalidTransactionStatusException;
 import com.nwg.ezpay.exception.InvalidTransactionTypeException;
-import com.nwg.ezpay.model.Transaction;
 
 public interface ITransactionService {
 

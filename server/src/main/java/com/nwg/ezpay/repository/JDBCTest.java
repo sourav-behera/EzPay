@@ -1,4 +1,4 @@
-package com.nwg.ezpay.dao;
+package com.nwg.ezpay.repository;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

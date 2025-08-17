@@ -1,10 +1,13 @@
 package com.nwg.ezpay.dao;
 
-import com.nwg.ezpay.model.Transaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.nwg.ezpay.entity.Transaction;
+import com.nwg.ezpay.repository.ITransactionDAO;
+import com.nwg.ezpay.repository.TransactionDAOImpl;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
