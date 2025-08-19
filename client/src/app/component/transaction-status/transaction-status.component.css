@@ -1,0 +1,333 @@
+/* Card and table styling */
+.transaction-history-card {
+  width: 100%; /* Changed to full width */
+  height: 100%;
+  margin: 0; /* Removed fixed margin */
+  padding: 16px; /* Adjusted padding for full-screen view */
+  border-radius: 0; /* Removed border radius for a clean full-screen look */
+  box-shadow: none; /* Removed box shadow for full screen */
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  margin-bottom: 6px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex-grow: 1;
+}
+
+.filter-field {
+  width: 200px;
+}
+
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
+}
+
+.mat-elevation-z1 {
+  overflow: auto;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.info-cell h4 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.info-cell p {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+.amount {
+  font-weight: 500;
+}
+
+.amount.positive {
+  color: #34c759;
+}
+
+.amount.negative {
+  color: #ff3b30;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+.status-badge .status-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.status-badge.status-completed {
+  background-color: #34c759;
+}
+
+.status-badge.status-processing {
+  background-color: #ff9500;
+}
+
+.status-badge.status-failed {
+  background-color: #ff3b30;
+}
+
+.mat-paginator {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+/* Added hover effect for the table rows */
+.clickable-row:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Transaction Details Modal Styling */
+.transaction-details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.transaction-details-card {
+  width: 90%;
+  max-width: 500px;
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.transaction-details-card .mat-card-header {
+  padding: 0;
+}
+
+.transaction-details-card .mat-card-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.transaction-details-card .close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item .label {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.detail-item .value {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.detail-item .value .mat-icon {
+  margin-right: 4px;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.detail-item .value.positive {
+  color: #34c759;
+}
+
+.detail-item .value.negative {
+  color: #ff3b30;
+}
+/* -------------- */
+/* Card + overlay */
+.txn-card {
+  width: 520px;
+  max-width: 92vw;
+  border-radius: 14px;
+}
+.transaction-details-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+}
+/* Header */
+.txn-header {
+  position: relative;
+  padding: 8px 16px 4px;
+  text-align: left;
+}
+.drag-bar {
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: #e6e8f0;
+  margin: 6px auto 10px;
+}
+.title {
+  margin: 0;
+  font-weight: 700;
+  color: #2b2f3a;
+}
+.close-btn {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+
+/* Content blocks */
+.txn-content {
+  padding: 0 16px 16px;
+}
+.kv {
+  padding: 14px 0;
+}
+.kv.small {
+  padding: 8px 0;
+}
+
+.kv-label {
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.kv-value {
+  font-size: 15px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #f4f6f8;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.id-row button {
+  margin-left: 2px;
+}
+
+/* status dot icon (your registered SVGs are 24px; make it tiny) */
+.status-dot {
+  width: 12px;
+  height: 12px;
+  transform: scale(0.5);
+}
+
+/* Amount colors */
+.positive {
+  color: #2ecc71;
+  font-weight: 600;
+}
+.negative {
+  color: #eb4d4b;
+  font-weight: 600;
+}
+
+/* Status badge inside accordion */
+.status-badge-details {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: #eef2ff;
+  color: #3b82f6;
+}
+.status-badge-details.completed {
+  background: #eaf8f0;
+  color: #2e7d32;
+}
+.status-badge-details.processing {
+  background: #fff4e5;
+  color: #b26a00;
+}
+.status-badge-details.failed {
+  background: #ffe9e9;
+  color: #c62828;
+}
+
+/* Accordion row */
+.accordion {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #111827;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.accordion-body {
+  padding-bottom: 8px;
+}
