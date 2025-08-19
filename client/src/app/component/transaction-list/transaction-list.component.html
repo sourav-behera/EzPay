@@ -1,0 +1,156 @@
+<mat-card appearance="outlined" id="transactions">
+    <div id="tools-container">
+        <div id="search-container">
+            <!-- Search bar -->
+            <mat-form-field appearance="outline" id="search-field">
+                <mat-label>Search</mat-label>
+                <input matInput placeholder="Search transactions" aria-label="Search transactions" (keyup)="getTransactionsBySearchID($event)">
+            </mat-form-field>
+        </div>
+        <div id="filter-container">
+            <!-- Filter dropdown -->
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Filter</mat-label>
+                <mat-select [(value)]="selectedFilter">
+                    <mat-option value="date">Date</mat-option>
+                    <mat-option value="dateRange">Date Range</mat-option>
+                    <mat-option value="amountRange">Amount Range</mat-option>
+                    <mat-option value="status">Status</mat-option>
+                    <mat-option value="type">Type</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div id="filter-input">
+                <!-- Type Filter -->
+                <mat-form-field 
+                    appearance="outline"
+                    class="filter-input-field"
+                    *ngIf="selectedFilter === 'type'"
+                    >
+                    <mat-label>Type</mat-label>
+                    <mat-select (selectionChange)="getTransactionsByType($event.value)">
+                        <mat-option value="UPI">UPI Payment</mat-option>
+                        <mat-option value="BANK">Bank Transfer</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Amount Range Filter -->
+                 <table *ngIf="selectedFilter === 'amountRange'">
+                    <td>
+                        <mat-form-field appearance="outline" class="filter-input-field">
+                            <mat-label>Min Amount</mat-label>
+                            <input matInput 
+                                type="number" 
+                                placeholder="0" 
+                                aria-label="Minimum Amount"
+                                [(ngModel)]="minimumAmount"
+                                (keyup)="getTransactionsByAmountRange()">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="outline" class="filter-input-field">
+                            <mat-label>Max Amount</mat-label>
+                            <input matInput 
+                                type="number" 
+                                placeholder="1000" 
+                                aria-label="Maximum Amount"
+                                [(ngModel)]="maximumAmount"
+                                (keyup)="getTransactionsByAmountRange()">
+                        </mat-form-field>
+                    </td>
+                 </table>
+                
+                <!-- Status Filter -->
+                <mat-form-field appearance="outline" class="filter-input-field" *ngIf="selectedFilter === 'status'">
+                    <mat-label>Status</mat-label>
+                    <mat-select (selectionChange)="getTransactionsByStatus($event.value)">
+                        <mat-option value="Completed">Completed</mat-option>
+                        <mat-option value="Pending">Pending</mat-option>
+                        <mat-option value="Failed">Failed</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                
+                <!-- Date Filter -->
+                <mat-form-field appearance="outline" class="filter-input-field" *ngIf="selectedFilter === 'date'">
+                    <mat-label>Date</mat-label>
+                    <input matInput [matDatepicker]="picker" placeholder="Select date" aria-label="Transaction Date" (dateChange)="getTransactionByDate($event.value)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <!-- Date Range Filter -->
+                <table *ngIf="selectedFilter === 'dateRange'">
+                    <td>
+                        <mat-form-field appearance="outline" class="filter-input-field">
+                            <mat-label>From</mat-label>
+                            <input matInput 
+                                [matDatepicker]="fromPicker" 
+                                placeholder="Select date" 
+                                aria-label="From Date" 
+                                [(ngModel)]="fromDate" 
+                                (dateChange)="getTransactionsByDateRange()">
+                            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #fromPicker></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="outline" class="filter-input-field">
+                            <mat-label>To</mat-label>
+                            <input matInput 
+                                [matDatepicker]="toPicker" 
+                                placeholder="Select date" 
+                                aria-label="To Date"
+                                [(ngModel)]="toDate"
+                                (dateChange)="getTransactionsByDateRange()">
+                            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #toPicker></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                </table>
+                 
+            </div>
+            <!-- Sort dropdown -->
+            <mat-form-field appearance="outline" class="filter-field">
+                <mat-label>Sort By</mat-label>
+                <mat-select (selectionChange)="handleSorting($event.value)">
+                    <mat-option value="transactionId">Transaction ID</mat-option>
+                    <mat-optgroup label="Date">
+                        <mat-option value="latestDate">Latest</mat-option>
+                        <mat-option value="oldestDate">Oldest</mat-option>
+                    </mat-optgroup>
+                    <mat-optgroup label="Amount">
+                        <mat-option value="increasingAmount">Increasing</mat-option>
+                        <mat-option value="decreasingAmount">Decreasing</mat-option>
+                    </mat-optgroup>
+                </mat-select>
+            </mat-form-field>
+            <!-- Reset Filters and Sorts -->
+            <!-- <button mat-raised-button (click)="resetForm()">Reset</button> -->
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-card id="transactions-list">
+        <mat-list *ngFor="let transaction of pagedData">
+            <mat-list-item>
+                <app-transaction
+                    [transactionId]="transaction.transactionId"
+                    [type]="transaction.type"
+                    [amount]="transaction.amount"
+                    [status]="transaction.status"
+                    [date]="transaction.date"
+                    [message]="transaction.message">
+                </app-transaction>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </mat-list>
+    </mat-card>
+    <div id="pagination-container">
+        <mat-paginator
+            [length]="totalDataLength"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 20]"
+            aria-label="Select page of transactions"
+            (page)="handlePageChange($event)"
+        >
+        </mat-paginator>
+    </div>
+</mat-card>

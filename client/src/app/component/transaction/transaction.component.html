@@ -1,0 +1,25 @@
+<div class="transaction">
+  <!-- Transaction Type -->
+  <mat-card class="section type">
+    <mat-card-content>
+      <div class="title">{{ type }}</div>
+      <div class="subtitle">ID: {{ transactionId }}</div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Transaction Info -->
+  <mat-card class="section info">
+    <mat-card-content>
+      <div class="title"> {{ message }} </div>
+      <div class="subtitle">{{ date | date:'medium' }}</div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Transaction Amount & Status -->
+  <mat-card class="section amount">
+    <mat-card-content>
+      <div class="title amount-text">{{ amount }}</div>
+      <div class="subtitle status" [ngClass]="status.toLowerCase()">{{ status }}</div>
+    </mat-card-content>
+  </mat-card>
+</div>
