@@ -49,6 +49,10 @@
 }
 
 .status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   &.pending {
     color: #ff9800;
   }

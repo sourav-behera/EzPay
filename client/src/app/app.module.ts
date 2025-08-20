@@ -49,6 +49,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinner,
   ],
   providers: [],
-  bootstrap: [TransactionStatusComponent]
+  bootstrap: [TransactionComponent]
 })
 export class AppModule {}
